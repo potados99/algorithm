@@ -65,7 +65,7 @@ def quick_sort_recursive(collection, left, right, verbose):
 		quick_sort_recursive(collection, p + 1,  right, verbose)
 
 
-def quick_sort_iterative(collection, verbose):
+def quick_sort_iterative(collection, verbose, mid_pivot=False, min_partition=0):
 	stack = list()
 
 	stack.append(0) # l
@@ -75,7 +75,10 @@ def quick_sort_iterative(collection, verbose):
 		h = stack.pop()
 		l = stack.pop()
 
-		p = qsort.partition(collection, l, h, verbose)
+		if h - l + 1 < min_partition: 
+			selection_sort()
+
+		p = qsort.partition(collection, l, h, verbose, mid_pivot)
 
 		# Elements on left
 		if l < p - 1:
@@ -88,11 +91,10 @@ def quick_sort_iterative(collection, verbose):
 			stack.append(h)
 
 
-def quick_sort(collection, verbose):
+# Optimize: 0 for none, 1 for partial file, 2 for mid pivot.
+def quick_sort(collection, verbose, optimize=0, optmize_arg=0):
 	if verbose: print(collection)
 	
-#	quick_sort_recursive(collection, 0, len(collection) - 1, verbose)
-	quick_sort_iterative(collection, verbose)
+	quick_sort_iterative(collection, verbose, optimize)
 
 	if verbose: print(collection)
-

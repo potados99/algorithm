@@ -1,5 +1,9 @@
-
-def partition(collection, left, right, verbose):
+def partition(collection, left, right, verbose, mid_pivot=False):
+	# Place mid-indexed item at the right end of the collection.
+	if mid_pivot:
+		mid = (left + right) / 2
+		collection[mid], collection[right] = collection[right], collection[mid]
+	
 	pivot = collection[right]
 	i = left - 1
 
@@ -12,3 +16,4 @@ def partition(collection, left, right, verbose):
 	collection[i + 1], collection[right] = collection[right], collection[i + 1]
 
 	return i + 1
+

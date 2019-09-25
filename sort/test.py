@@ -26,10 +26,10 @@ def test(name, body, sample):
 def test_all(sample_size, verbose=False):
 	sample = random_list(sample_size)
 
-	test("Quick sort test", lambda data: sort.quick_sort(data, verbose), copy_list(sample))
+	test("Quick sort test", lambda data: sort.quick_sort(data, False, 0x01 | 0x02), copy_list(sample))
 	test("Selection sort test", lambda data: sort.selection_sort(data, verbose), copy_list(sample))
 	test("Insertion sort test", lambda data: sort.insertion_sort(data, verbose), copy_list(sample))
 	test("Bubble sort test", lambda data: sort.bubble_sort(data, verbose), copy_list(sample))
 
 
-test_all(1000000, verbose=False)
+test_all(20, verbose=False)
