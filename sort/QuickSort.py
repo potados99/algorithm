@@ -1,21 +1,18 @@
-class QsortDemo:
+# 20190925 potados
 
+class QuickSort:
 	def __init__(self):
 		# Use mid index value as a pivot?
 		self.mid_pivot = False
-		# Use selection sort for array smaller than this. 
+		# Use selection sort for array smaller than this.
 		self.min_partition = 0
-
-	def setOptimization(self, mid_pivot, min_partition):
-		self.mid_pivot = mid_pivot
-		self.min_partition = min_partition
 
 	def partition(self, collection, left, right):
 		# Place mid-indexed item at the right end of the collection.
 		if self.mid_pivot:
 			mid = (left + right) / 2
 			collection[mid], collection[right] = collection[right], collection[mid]
-	
+
 		pivot = collection[right]
 		i = left - 1
 
@@ -28,14 +25,35 @@ class QsortDemo:
 
 		return i + 1
 
-	def small_sort(self, collection, left, right, verbose):
-		pass
+	# Insertion sort.
+	def small_sort(self, collection, left, right):
+		# From left to right - 1
+		for i in range(left, right):
+			n = collection[i + 1]
 
-	# Invoke quick sort for given collection.
-	def sort(collection, mid_pivot, min_partition):
+			# From i to left
+			for j in range(i, left - 1, -1):
+				# Push
+				if (n <= collection[j]):
+					collection[j + 1] = collection[j]
+
+					# If that was the last push, next loop does not exist.
+					# So assign value here.
+					if (j == 0): collection[0] = n
+
+				# Assign
+				else:
+				 	collection[j + 1] = n
+					break
+
+	# Min_partition 39 recommanded.
+	def set_optimization(self, mid_pivot, min_partition):
 		self.mid_pivot = mid_pivot
 		self.min_partition = min_partition
 
+	# Invoke quick sort for given collection.
+	# Optimization level depends on what you gave with set_optimization method.
+	def sort(self, collection):
 		stack = list()
 
 		stack.append(0)	# l
@@ -50,17 +68,17 @@ class QsortDemo:
 				continue
 
 			# Use selection sort for small subarray.
-			if h - l + 1 < min_partition: 
-				self.small_sort(collection, l, h, verbose)
+			if h - l + 1 < self.min_partition:
+				self.small_sort(collection, l, h)
 				continue
 
-			p = self.partition(collection, l, h, verbose, mid_pivot)
+			p = self.partition(collection, l, h)
 
 			# Elements on left
 			if l < p - 1:
 				stack.append(l)
 				stack.append(p - 1)
-			
+
 			# Elements on right
 			if p + 1 < h:
 				stack.append(p + 1)
