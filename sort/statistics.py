@@ -61,7 +61,7 @@ sorting_test("Insertion Sort", insertion_sort, x_range)
 sorting_test("Bubble Sort", bubble_sort, x_range)
 
 qsorter.set_optimization(mid_pivot=False, min_partition=0)
-sorting_test("Quick Sort None-Optimized", qsorter.sort, x_range)
+sorting_test("Quick Sort Non-Optimized", qsorter.sort, x_range)
 
 qsorter.set_optimization(mid_pivot=True, min_partition=0)
 sorting_test("Quick Sort Using Mid Pivot", qsorter.sort, x_range)
