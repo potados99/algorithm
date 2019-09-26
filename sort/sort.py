@@ -52,3 +52,6 @@ def bubble_sort(collection, verbose=False):
 			if (collection[j] > collection[j + 1]):
 				collection[j], collection[j + 1] = collection[j + 1], collection[j]
 				if verbose: print(collection)
+
+def shell_sort(collection, verbose=False):
+	pass
