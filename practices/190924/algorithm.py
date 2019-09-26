@@ -1,5 +1,11 @@
 # 20190924 potados
 
+# Get sum of divisor of given number n.
+# This does not include n as divisor.
+def divisorSum(n):
+	if (n < 1): return 0
+	return sum(map(lambda d: d if n % d == 0 else 0, range(1, n)))
+
 # Native number n
 def isPerfect(n):
 	return divisorSum(n) - n
@@ -47,7 +53,7 @@ def cocktailShaker(collection, verbose=True):
 					collection[j - 1], collection[j] = collection[j], collection[j - 1]
 					if verbose: print(collection)
 			left += 1
-		
+
 		if right - left <= 1:break
 
 		direction = not direction
@@ -62,10 +68,3 @@ def exchangeSortReversed(collection, verbose=True):
 			if collection[i] < collection[j]:
 				collection[i], collection[j] = collection[j], collection[i]
 				if verbose: print(collection)
-
-# Get sum of divisor of given number n.
-# This does not include n as divisor.
-def divisorSum(n):
-	if (n < 1): return 0
-	return sum(map(lambda d: d if n % d == 0 else 0, range(1, n)))
-

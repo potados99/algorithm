@@ -92,3 +92,46 @@ def subarray_insertion_sort(collection, first, last, gap, verbose):
 		if verbose: print(collection)
 
 		rotation += 1
+
+# Bubble sort variation.
+# Change direction by loop.
+def cocktailShaker(collection, verbose=False):
+	size = len(collection)
+	direction = True # To right
+
+	left = 0
+	right = size - 1
+
+	if verbose: print(collection)
+
+	for i in range(0, size / 2 + 1):
+		if direction:
+			if verbose: print("To right!")
+			for j in range(left, size - 1): # 0 to size -1
+				if collection[j] > collection[j + 1]:
+					collection[j], collection[j + 1] = collection[j + 1], collection[j]
+					if verbose: print(collection)
+			right -= 1
+
+		else:
+			if verbose: print("To left!")
+			for j in range(right, 0, -1): # size - 1 to 1
+				if collection[j - 1] > collection[j]:
+					collection[j - 1], collection[j] = collection[j], collection[j - 1]
+					if verbose: print(collection)
+			left += 1
+
+		if right - left <= 1:break
+
+		direction = not direction
+
+	if verbose: print(collection)
+
+def exchangeSort(collection, verbose=False):
+	size = len(collection)
+
+	for i in range(0, size -1):
+		for j in range(i, size):
+			if collection[i] > collection[j]:
+				collection[i], collection[j] = collection[j], collection[i]
+				if verbose: print(collection)

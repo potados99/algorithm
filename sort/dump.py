@@ -18,7 +18,7 @@ def dump_function_xy(function, x_range, x_name="", y_name=""):
 
 # This function creates output that can be interpreted by MATLAB.
 # Just copy and past the output, MATLAB will show them on plot.
-def dump_sort_function(name, sort_function, data_range):
+def dump_sort_function(name, sort_function, data_range, y_limit=0):
     dump_function_xy(
         lambda x: elapsed_time(lambda: sort_function(random_list(x))),
         data_range,
@@ -43,24 +43,5 @@ def dump_sort_function(name, sort_function, data_range):
     print("xlabel('Number of Records')")
     print("ylabel('Elapsed Time (millisec)')")
     print("legend({'random data', 'ordered data', 'reverse ordered data'}, 'Location', 'northwest')")
+    if y_limit != 0: print("ylim([0 " + str(y_limit) + "])")
     print("")
-
-# Test all
-def run():
-    x_range = range(1, 1000, 5)
-    qsorter = QuickSort()
-
-    dump_sort_function("Selection Sort", selection_sort, x_range)
-    dump_sort_function("Insertion Sort", insertion_sort, x_range)
-    dump_sort_function("Shell Sort", shell_sort, x_range)
-    dump_sort_function("Bubble Sort", bubble_sort, x_range)
-    qsorter.set_optimization(mid_pivot=False, min_partition=0)
-    dump_sort_function("Quick Sort Non-Optimized", qsorter.sort, x_range)
-    qsorter.set_optimization(mid_pivot=True, min_partition=0)
-    dump_sort_function("Quick Sort Using Mid Pivot", qsorter.sort, x_range)
-    qsorter.set_optimization(mid_pivot=False, min_partition=38)
-    dump_sort_function("Quick Sort Using Insertion Sort", qsorter.sort, x_range)
-    qsorter.set_optimization(mid_pivot=True, min_partition=38)
-    dump_sort_function("Quick Sort Optimized", qsorter.sort, x_range)
-
-run()
