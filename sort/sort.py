@@ -28,17 +28,13 @@ def insertion_sort(collection, verbose=False):
 		n = collection[i]
 
 		# j from i - 1 to 0.
-		for j in range(i - 1, -1, -1):
+		for j in range(i - 1, -2, -1):
 			if collection[j] <= n: break
 
 			collection[j + 1] = collection[j]
 			if verbose: print(collection)
 
-		# Handle the special case.
-		if j == 0:
-			collection[0] = n
-		else:
-			collection[j + 1] = n
+		collection[j + 1] = n
 
 		if verbose: print(collection)
 
