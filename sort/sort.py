@@ -57,7 +57,6 @@ def shell_sort(collection, verbose=False):
 	rotation = 1
 
 	while gap > 0:
-		print(gap)
 		if verbose: print("Rotation " + str(rotation))
 
 		gap = round_odd(gap)

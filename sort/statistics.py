@@ -47,24 +47,19 @@ def dump_sort_function(name, sort_function, data_range):
 
 # Test all
 def run():
-    x_range = range(1, 1000, 100)
+    x_range = range(1, 1000, 5)
     qsorter = QuickSort()
 
     dump_sort_function("Selection Sort", selection_sort, x_range)
-
     dump_sort_function("Insertion Sort", insertion_sort, x_range)
-
+    dump_sort_function("Shell Sort", shell_sort, x_range)
     dump_sort_function("Bubble Sort", bubble_sort, x_range)
-
     qsorter.set_optimization(mid_pivot=False, min_partition=0)
     dump_sort_function("Quick Sort Non-Optimized", qsorter.sort, x_range)
-
     qsorter.set_optimization(mid_pivot=True, min_partition=0)
     dump_sort_function("Quick Sort Using Mid Pivot", qsorter.sort, x_range)
-
     qsorter.set_optimization(mid_pivot=False, min_partition=38)
     dump_sort_function("Quick Sort Using Insertion Sort", qsorter.sort, x_range)
-
     qsorter.set_optimization(mid_pivot=True, min_partition=38)
     dump_sort_function("Quick Sort Optimized", qsorter.sort, x_range)
 

@@ -22,13 +22,13 @@ def test_all(sample_size, verbose=False):
 	qsorter = QuickSort()
 	qsorter.set_optimization(mid_pivot=False, min_partition=0)
 
-	#test("Pure Quick sort test", lambda data: qsorter.sort(data), copy_list(sample))
-	#qsorter.set_optimization(mid_pivot=True, min_partition=39)
-	#test("Optimized quick sort test", lambda data: qsorter.sort(data), copy_list(sample))
-	#test("Selection sort test", lambda data: selection_sort(data, verbose), copy_list(sample))
+	test("Pure Quick sort test", lambda data: qsorter.sort(data), copy_list(sample))
+	qsorter.set_optimization(mid_pivot=True, min_partition=39)
+	test("Optimized quick sort test", lambda data: qsorter.sort(data), copy_list(sample))
+	test("Selection sort test", lambda data: selection_sort(data, verbose), copy_list(sample))
 	test("Insertion sort test", lambda data: insertion_sort(data, verbose), copy_list(sample))
-	#test("Bubble sort test", lambda data: bubble_sort(data, verbose), copy_list(sample))
-	#test("Shell sort test", lambda data: shell_sort(data, verbose), copy_list(sample))
+	test("Bubble sort test", lambda data: bubble_sort(data, verbose), copy_list(sample))
+	test("Shell sort test", lambda data: shell_sort(data, verbose), copy_list(sample))
 
 def get_proper_n(n_range):
 	# With n_sample different samples
@@ -38,7 +38,7 @@ def get_proper_n(n_range):
 	n_measure = 20
 
 	possible_n = list()
-	sorter = QsortDemo()
+	sorter = QuickSort()
 	sorter.set_optimization(mid_pivot=True, min_partition=0)
 
 	for i in n_range:
@@ -47,8 +47,8 @@ def get_proper_n(n_range):
 
 		for _ in range(0, n_sample):
 			sample = random_list(i)
-			qsort_elapsed.append(average([elapsed_time(lambda data: sorter.sort(data), copy_list(sample)) for x in range(0, n_measure)]))
-			isort_elapsed.append(average([elapsed_time(lambda data: insertion_sort(data, False), copy_list(sample)) for x in range(0, n_measure)]))
+			qsort_elapsed.append(average([elapsed_time(lambda: sorter.sort(copy_list(sample))) for x in range(0, n_measure)]))
+			isort_elapsed.append(average([elapsed_time(lambda: insertion_sort(copy_list(sample), False)) for x in range(0, n_measure)]))
 
 		gain = average(isort_elapsed) - average(qsort_elapsed)
 
@@ -58,4 +58,4 @@ def get_proper_n(n_range):
 
 	return min(possible_n)
 
-test_all(10, True)
+test_all(700, False)
