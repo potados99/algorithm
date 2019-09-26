@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from QsortDemo import *
+from QuickSort import *
 from sort import *
 from util import *
 
@@ -19,15 +19,15 @@ def test(name, body, sample):
 def test_all(sample_size, verbose=False):
 	sample = random_list(sample_size)
 
-	qsorter = QsortDemo()
+	qsorter = QuickSort()
 	qsorter.set_optimization(mid_pivot=False, min_partition=0)
 
-	test("Pure Quick sort test", lambda data: qsorter.sort(data), copy_list(sample))
-	qsorter.set_optimization(mid_pivot=True, min_partition=39)
-	test("Optimized quick sort test", lambda data: qsorter.sort(data), copy_list(sample))
-	test("Selection sort test", lambda data: selection_sort(data, verbose), copy_list(sample))
+	#test("Pure Quick sort test", lambda data: qsorter.sort(data), copy_list(sample))
+	#qsorter.set_optimization(mid_pivot=True, min_partition=39)
+	#test("Optimized quick sort test", lambda data: qsorter.sort(data), copy_list(sample))
+	#test("Selection sort test", lambda data: selection_sort(data, verbose), copy_list(sample))
 	test("Insertion sort test", lambda data: insertion_sort(data, verbose), copy_list(sample))
-	test("Bubble sort test", lambda data: bubble_sort(data, verbose), copy_list(sample))
+	#test("Bubble sort test", lambda data: bubble_sort(data, verbose), copy_list(sample))
 
 def get_proper_n(n_range):
 	# With n_sample different samples
@@ -56,3 +56,5 @@ def get_proper_n(n_range):
 			possible_n.append(i)
 
 	return min(possible_n)
+
+test_all(10, True)

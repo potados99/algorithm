@@ -47,7 +47,7 @@ def dump_sort_function(name, sort_function, data_range):
 
 # Test all
 def run():
-    x_range = range(1, 1000, 5)
+    x_range = range(1, 1000, 100)
     qsorter = QuickSort()
 
     dump_sort_function("Selection Sort", selection_sort, x_range)

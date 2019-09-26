@@ -20,27 +20,25 @@ def selection_sort(collection, verbose=False):
 def insertion_sort(collection, verbose=False):
 	if verbose: print(collection)
 
-	for i in range(0, len(collection) - 1):
-		if verbose: print("Rotation " + str(i + 1))
+	for i in range(1, len(collection)):
+		if verbose: print("Rotation " + str(i))
 
-		n = collection[i + 1]
+		n = collection[i]
 
-		# From i to zero.
-		for j in range(i, -1, -1):
-			# Push
-			if (n <= collection[j]):
-				collection[j + 1] = collection[j]
+		# j from i - 1 to 0.
+		for j in range(i - 1, -1, -1):
+			if collection[j] <= n: break
 
-				# If that was the last push, next loop does not exist.
-				# So assign value here.
-				if (j == 0): collection[0] = n
-				if verbose: print(collection)
+			collection[j + 1] = collection[j]
+			if verbose: print(collection)
 
-			# Assign
-			else:
-			 	collection[j + 1] = n
-				if verbose: print(collection)
-				break
+		# Handle the special case.
+		if j == 0:
+			collection[0] = n
+		else:
+			collection[j + 1] = n
+
+		if verbose: print(collection)
 
 def bubble_sort(collection, verbose=False):
 	if verbose: print(collection)

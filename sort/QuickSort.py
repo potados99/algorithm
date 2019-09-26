@@ -27,24 +27,17 @@ class QuickSort:
 
 	# Insertion sort.
 	def small_sort(self, collection, left, right):
-		# From left to right - 1
-		for i in range(left, right):
-			n = collection[i + 1]
+		for i in range(left + 1, right + 1):
+			n = collection[i]
 
-			# From i to left
-			for j in range(i, left - 1, -1):
-				# Push
-				if (n <= collection[j]):
-					collection[j + 1] = collection[j]
+			# j from i - 1 to 0.
+			for j in range(i - 1, -1, -1):
+				if collection[j] <= n: break
+				collection[j + 1] = collection[j]
 
-					# If that was the last push, next loop does not exist.
-					# So assign value here.
-					if (j == 0): collection[0] = n
-
-				# Assign
-				else:
-				 	collection[j + 1] = n
-					break
+			# Handle the special case.
+			if j == 0:	collection[0] = n
+			else:		collection[j + 1] = n
 
 	# Min_partition 39 recommanded.
 	def set_optimization(self, mid_pivot, min_partition):
