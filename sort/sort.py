@@ -135,3 +135,16 @@ def exchangeSort(collection, verbose=False):
 			if collection[i] > collection[j]:
 				collection[i], collection[j] = collection[j], collection[i]
 				if verbose: print(collection)
+
+def mergeSort(collection, verbose=False):
+	pass
+
+def heapSort(collection, verbose=False):
+	pass
+
+def countingSort(collection, verbose=False):
+	pass
+
+def radixSort(collection, verbose=False):
+	pass
+
