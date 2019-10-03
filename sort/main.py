@@ -1,3 +1,5 @@
+#!/usr/local/bin/python3.7
+
 # 20190926 potados
 
 from dump import *
@@ -50,10 +52,13 @@ def get_proper_n(n_range):
 
 # Dump all sorting functions.
 def dump_all(x_range):
-    qsorter = QuickSort()
+	qsorter = QuickSort()
 
-    dump_sort_function("Selection Sort", selection_sort, x_range, 60)
-    dump_sort_function("Exchange Sort", exchangeSort, x_range, 60)
+	dump_sort_function("Bubble Sort", bubble_sort, x_range)
+	dump_sort_function("Cocktail Sort", cocktail_shaker, x_range)
+
+	dump_sort_function("Selection Sort", selection_sort, x_range, 60)
+	dump_sort_function("Exchange Sort", exchange_sort, x_range, 60)
 
 '''
     dump_sort_function("Selection Sort", selection_sort, x_range)
@@ -72,4 +77,4 @@ def dump_all(x_range):
 
 
 #test_all(10)
-dump_all(range(1, 1000, 5))
+dump_all(range(1, 200, 5))

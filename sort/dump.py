@@ -7,14 +7,14 @@ from QuickSort import *
 # Print x in x_range and their results as y.
 # Useful when drawing a 2D plot in MATLAB.
 def dump_function_xy(function, x_range, x_name="", y_name=""):
-    x = x_range
-    y = map(function, x_range)
+    x_list = list(x_range)
+    y_list = list(map(function, x_list))
 
     if x_name != "":
-        print(x_name + " = " + str(x))
+        print(x_name + " = " + str(x_list))
 
     if y_name != "":
-        print(y_name + " = " + str(y))
+        print(y_name + " = " + str(y_list))
 
 # This function creates output that can be interpreted by MATLAB.
 # Just copy and past the output, MATLAB will show them on plot.

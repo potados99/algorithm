@@ -53,7 +53,7 @@ def shell_sort(collection, verbose=False):
 	if verbose: print(collection)
 
 	size = len(collection)
-	gap = round_odd(size / 2)
+	gap = round_odd(size >> 1)
 	rotation = 1
 
 	while gap > 0:
@@ -95,7 +95,7 @@ def subarray_insertion_sort(collection, first, last, gap, verbose):
 
 # Bubble sort variation.
 # Change direction by loop.
-def cocktailShaker(collection, verbose=False):
+def cocktail_shaker(collection, verbose=False):
 	size = len(collection)
 	direction = True # To right
 
@@ -104,7 +104,7 @@ def cocktailShaker(collection, verbose=False):
 
 	if verbose: print(collection)
 
-	for i in range(0, size / 2 + 1):
+	for i in range(0, (size >> 1) + 1):
 		if direction:
 			if verbose: print("To right!")
 			for j in range(left, size - 1): # 0 to size -1
@@ -127,7 +127,7 @@ def cocktailShaker(collection, verbose=False):
 
 	if verbose: print(collection)
 
-def exchangeSort(collection, verbose=False):
+def exchange_sort(collection, verbose=False):
 	size = len(collection)
 
 	for i in range(0, size -1):
@@ -136,15 +136,14 @@ def exchangeSort(collection, verbose=False):
 				collection[i], collection[j] = collection[j], collection[i]
 				if verbose: print(collection)
 
-def mergeSort(collection, verbose=False):
+def merge_sort(collection, verbose=False):
 	pass
 
-def heapSort(collection, verbose=False):
+def heap_sort(collection, verbose=False):
 	pass
 
-def countingSort(collection, verbose=False):
+def counting_sort(collection, verbose=False):
 	pass
 
-def radixSort(collection, verbose=False):
+def radix_sort(collection, verbose=False):
 	pass
-
