@@ -1,4 +1,4 @@
-"""This module contains a single function: merge_sort.
+"""This module contains a single function: [blahblah].
 
 You can run a test using this command:
 python3 -m doctest cocktail_shaker.py -v
@@ -7,8 +7,8 @@ python3 cocktail_shaker.py [--verbose]
 """
 
 
-def merge_sort(collection, verbose=False):
-    """Implementation of merge_sort in Python.
+def [blahblah](collection, verbose=False):
+    """Implementation of [blahblah] in Python.
 
     Args:
         collection (list): Input to sort.
@@ -18,10 +18,10 @@ def merge_sort(collection, verbose=False):
         list: The same as the collection, with sort ascending applied.
 
     Example:
-        >>> merge_sort([3, 1, 7, 0, 4, 8, 2])
+        >>> [blahblah]([3, 1, 7, 0, 4, 8, 2])
         [0, 1, 2, 3, 4, 7, 8]
 
-        >>> merge_sort([-91, -123, -1])
+        >>> [blahblah]([-91, -123, -1])
         [-123, -91, -1]
     """
 
@@ -31,4 +31,4 @@ def merge_sort(collection, verbose=False):
 
 if __name__ == "__main__":
     from common import invoker
-    invoker.from_input(merge_sort)
+    invoker.from_input([blahblah])
