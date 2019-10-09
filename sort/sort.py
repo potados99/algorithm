@@ -68,6 +68,7 @@ def shell_sort(collection, verbose=False):
 		gap = gap >> 1
 		rotation += 1
 
+# Used by shell_sort
 def subarray_insertion_sort(collection, first, last, gap, verbose):
 	if verbose:
 		print("first: " + str(first) + " last: " + str(last) + " gap:  " + str(gap))
