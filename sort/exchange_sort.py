@@ -37,5 +37,5 @@ def exchange_sort(collection, verbose=False):
 
 
 if __name__ == "__main__":
-    from invoker import from_input
+    from common.invoker import from_input
     from_input(exchange_sort)

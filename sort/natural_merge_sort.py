@@ -30,5 +30,5 @@ def natural_merge_sort(collection, verbose=False):
 
 
 if __name__ == "__main__":
-    from invoker import from_input
+    from common.invoker import from_input
     from_input(natural_merge_sort)
