@@ -1,5 +1,4 @@
 from util import *
-from sort import *
 
 
 def dump_elapsed_time(name, sorting_function, collection):
@@ -50,7 +49,7 @@ def dump_function_xy(function, x_range, x_name="", y_name=""):
 
 
 def dump_sort_function(name, sort_function, data_range, y_limit=0):
-    """Generate MATLAB sorce code that draws a 2D plot
+    """Generate a bunch of MATLAB sorce code that draws a 2D plot
     showing a performance of a sort function.
 
     Invoke dump_funtion_xy for multiple data set to get the relations
@@ -62,6 +61,8 @@ def dump_sort_function(name, sort_function, data_range, y_limit=0):
         data_range (range): How many data to use.
         y_limit (int): High limit of y in the plot.
     """
+
+    print("% " + name + " %")
 
     dump_function_xy(
         lambda x: elapsed_time(lambda: sort_function(random_list(x))),
@@ -86,9 +87,9 @@ def dump_sort_function(name, sort_function, data_range, y_limit=0):
 
     print("figure")
     print("plot(x, smoothdata(y1), x, smoothdata(y2), x, smoothdata(y3))")
-    print("title('Time Complexity of " + name + "')")
+    print("title('Running time of " + name + "')")
     print("xlabel('Number of Records')")
     print("ylabel('Elapsed Time (millisec)')")
-    print("legend({'random data', 'ordered data', 'reverse ordered data'}, 'Location', 'northwest')")
+    print("legend({'Random data', 'Ordered data', 'Reverse ordered data'}, 'Location', 'northwest')")
     if y_limit != 0: print("ylim([0 " + str(y_limit) + "])")
     print("")
