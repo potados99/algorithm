@@ -1,9 +1,9 @@
 """This module contains a single function: insertion_sort.
 
 You can run a test using this command:
-python3 -m doctest insertion_sort.py -v
+    python3 -m doctest insertion_sort.py -v
 or just
-python3 insertion_sort.py [--verbose]
+    python3 insertion_sort.py [--verbose]
 """
 
 

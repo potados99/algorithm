@@ -1,9 +1,9 @@
 """This module contains a single function: merge_sort.
 
 You can run a test using this command:
-python3 -m doctest merge_sort.py -v
+    python3 -m doctest merge_sort.py -v
 or just
-python3 merge_sort.py [--verbose]
+    python3 merge_sort.py [--verbose]
 """
 
 

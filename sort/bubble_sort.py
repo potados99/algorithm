@@ -1,9 +1,9 @@
 """This module contains a single function: bubble_sort.
 
 You can run a test using this command:
-python3 -m doctest bubble_sort.py -v
+    python3 -m doctest bubble_sort.py -v
 or just
-python3 bubble_sort.py [--verbose]
+    python3 bubble_sort.py [--verbose]
 """
 
 

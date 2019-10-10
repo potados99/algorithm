@@ -3,11 +3,13 @@
 Performance test:
     1. merge sort vs natural merge sort.
     2. tournament sort vs heap sort.
+
+Run it using following command:
+    python3 practice4.py
 """
 
 
-import sys
-sys.path.append('..')
+import sys; sys.path.append('..')
 
 from sort.common.dump import *
 
