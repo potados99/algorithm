@@ -1,9 +1,9 @@
 """This module contains a single function: exchange_sort.
 
 You can run a test using this command:
-python3 -m doctest cocktail_shaker.py -v
+python3 -m doctest exchange_sort.py -v
 or just
-python3 cocktail_shaker.py [--verbose]
+python3 exchange_sort.py [--verbose]
 """
 
 

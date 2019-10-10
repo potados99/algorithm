@@ -2,9 +2,9 @@
 shell_sort, subarray_insertion_sort, and round_odd.
 
 You can run a test using this command:
-python3 -m doctest cocktail_shaker.py -v
+python3 -m doctest shell_sort.py -v
 or just
-python3 cocktail_shaker.py [--verbose]
+python3 shell_sort.py [--verbose]
 """
 
 

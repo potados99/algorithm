@@ -1,9 +1,9 @@
 """This module contains a single function: [blahblah].
 
 You can run a test using this command:
-python3 -m doctest cocktail_shaker.py -v
+python3 -m doctest [blahblah].py -v
 or just
-python3 cocktail_shaker.py [--verbose]
+python3 [blahblah].py [--verbose]
 """
 
 
