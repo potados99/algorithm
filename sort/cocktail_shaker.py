@@ -56,5 +56,5 @@ def cocktail_shaker(collection, verbose=False):
 
 
 if __name__ == "__main__":
-    from common import invoker
-    invoker.from_input(cocktail_shaker)
+    from invoker import from_input
+    from_input(cocktail_shaker)

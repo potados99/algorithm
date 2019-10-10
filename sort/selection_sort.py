@@ -43,5 +43,5 @@ def selection_sort(collection, verbose=False):
 
 
 if __name__ == "__main__":
-    from common import invoker
-    invoker.from_input(selection_sort)
+    from invoker import from_input
+    from_input(selection_sort)

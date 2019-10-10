@@ -30,5 +30,5 @@ def counting_sort(collection, verbose=False):
 
 
 if __name__ == "__main__":
-    from common import invoker
-    invoker.from_input(counting_sort)
+    from invoker import from_input
+    from_input(counting_sort)

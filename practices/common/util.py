@@ -22,6 +22,3 @@ def reverse_ordered_list(size):
 
 def copy_list(origin):
     return copy.deepcopy(origin)
-
-def round_odd(number):
-    return number + 1 if number % 2 == 0 else number

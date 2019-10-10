@@ -1,9 +1,3 @@
-#!/usr/bin/python
-
-from QuickSort import *
-from sort import *
-from util import *
-
 def test_elapsed_time(name, body, sample):
     print(name + " started with " + str(len(sample)) + " size of random samples.")
 

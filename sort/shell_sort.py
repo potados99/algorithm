@@ -1,5 +1,5 @@
-"""This module contains two functions:
-shell_sort and subarray_insertion_sort.
+"""This module contains three functions:
+shell_sort, subarray_insertion_sort, and round_odd.
 
 You can run a test using this command:
 python3 -m doctest cocktail_shaker.py -v
@@ -8,7 +8,23 @@ python3 cocktail_shaker.py [--verbose]
 """
 
 
-from common import util
+def round_odd(number):
+    """Round number to odd by adding 1 if it is even.
+
+    Args:
+        number (int): The number we want to round.
+
+    Returns:
+        int: Rounded number.
+
+    Example:
+        >>> round_odd(3)
+        3
+        >>> round_odd(4)
+        5
+    """
+    return number + 1 if number % 2 == 0 else number
+
 
 def subarray_insertion_sort(collection, first, last, gap, verbose=False):
     """Insertion sort among elements with gap.
@@ -74,13 +90,13 @@ def shell_sort(collection, verbose=False):
     """
 
     size = len(collection)
-    gap = util.round_odd(size >> 1)
+    gap = round_odd(size >> 1)
     rotation = 1
 
     while gap > 0:
         if verbose: print("Rotation " + str(rotation))
 
-        gap = util.round_odd(gap)
+        gap = round_odd(gap)
 
         # Number of subarrays: gap
         for i in range(0, gap + 1):
@@ -93,5 +109,5 @@ def shell_sort(collection, verbose=False):
 
 
 if __name__ == "__main__":
-    from common import invoker
-    invoker.from_input(shell_sort)
+    from invoker import from_input
+    from_input(shell_sort)
