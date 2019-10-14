@@ -22,3 +22,6 @@ def reverse_ordered_list(size):
 
 def copy_list(origin):
     return copy.deepcopy(origin)
+
+def swap(list, a, b):
+    list[a], list[b] = list[b], list[a]

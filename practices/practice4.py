@@ -12,7 +12,6 @@ Run it using following command:
 import sys; sys.path.append('..')
 
 from sort.common.dump import *
-
 from sort.merge_sort import *
 from sort.natural_merge_sort import *
 from sort.tournament_sort import *
