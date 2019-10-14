@@ -10,39 +10,6 @@ or just
 from common.util import *
 
 
-def left_child(node):
-    return (2 * node) + 1
-
-
-def right_child(node):
-    return (2 * node) + 2
-
-
-def parent(node):
-    return (node - 1) >> 1
-
-
-def is_leaf(collection, node):
-    """Check if this node has no children.
-
-    Args:
-        collection (list): Whole tree
-        node (int): Index of node in array(or list) representation.
-
-    Returns:
-        bool: True if it has no children.
-
-    Example:
-        >>> is_leaf([3, 2, 4, 5, 1, 7], 0)
-        False
-        >>> is_leaf([3, 2, 4, 5, 1, 7], 2)
-        False
-        >>> is_leaf([3, 2, 4, 5, 1, 7], 3)
-        True
-    """
-    return len(collection) < left_child(node) + 1
-
-
 def max_heapify(collection, root, heap_size):
     """Make it a max heap.
     Assume that subtrees are max heap.
@@ -66,8 +33,8 @@ def max_heapify(collection, root, heap_size):
         [7, 4, 3, 0, 1, 2, 8]
     """
 
-    left = left_child(root)
-    right = right_child(root)
+    left = (root << 1) + 1
+    right = (root << 1) + 2
 
     bigger_one = root
 
