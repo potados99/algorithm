@@ -38,6 +38,7 @@ def max_heapify(collection, root, heap_size):
 
     bigger_one = root
 
+    # Beware that the bigger_one will could be updated for two times.
     if left < heap_size and collection[left] > collection[bigger_one]:
         bigger_one = left
 
@@ -73,16 +74,19 @@ def heap_sort(collection, verbose=False):
     last_subtree_root = (size << 1) - 1
 
     # 1. Build max heap.
-    if verbose: print("Build max heap.")
+    if verbose: print("1. Build max heap:")
+
     for i in range(last_subtree_root, -1, -1):
         max_heapify(collection, i, size)
         if verbose: print(collection)
 
     # 2. Send root to the end of the list.
-    if verbose: print("Pick from root.")
+    if verbose: print("2. Pick from root:")
+
     for i in range(size - 1, 0, -1):
         swap(collection, 0, i)
         if verbose: print(collection)
+
         max_heapify(collection, 0, i)
         if verbose: print(collection)
 
