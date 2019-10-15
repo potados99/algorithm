@@ -23,6 +23,9 @@ def tournament_sort(collection, verbose=False):
 
         >>> tournament_sort([-91, -123, -1])
         [-123, -91, -1]
+
+        >>> tournament_sort([])
+        []
     """
 
 

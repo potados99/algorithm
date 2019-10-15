@@ -23,6 +23,9 @@ def exchange_sort(collection, verbose=False):
 
         >>> exchange_sort([-91, -123, -1])
         [-123, -91, -1]
+
+        >>> exchange_sort([])
+        []
     """
 
     size = len(collection)

@@ -72,6 +72,9 @@ def heap_sort(collection, verbose=False):
 
         >>> heap_sort([-91, -123, -1])
         [-123, -91, -1]
+
+        >>> heap_sort([])
+        []
     """
 
     size = len(collection)

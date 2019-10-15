@@ -30,6 +30,9 @@ def [blahblah](collection, verbose=False):
 
         >>> [blahblah]([-91, -123, -1])
         [-123, -91, -1]
+
+        >>> [blahblah]([])
+        []
     """
 
 

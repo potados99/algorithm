@@ -23,6 +23,9 @@ def insertion_sort(collection, verbose=False):
 
         >>> insertion_sort([-91, -123, -1])
         [-123, -91, -1]
+
+        >>> insertion_sort([])
+        []
     """
 
     for i in range(1, len(collection)):

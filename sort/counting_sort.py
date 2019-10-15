@@ -23,6 +23,9 @@ def counting_sort(collection, verbose=False):
 
         >>> counting_sort([-91, -123, -1])
         [-123, -91, -1]
+
+        >>> counting_sort([])
+        []
     """
 
 

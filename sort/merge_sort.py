@@ -124,6 +124,9 @@ def merge_sort(collection, verbose=False):
 
         >>> merge_sort([-91, -123, -1])
         [-123, -91, -1]
+
+        >>> merge_sort([])
+        []
     """
 
     merge_sort_recursive(collection, 0, len(collection) - 1, verbose, 0)

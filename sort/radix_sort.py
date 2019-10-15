@@ -23,6 +23,9 @@ def radix_sort(collection, verbose=False):
 
         >>> radix_sort([-91, -123, -1])
         [-123, -91, -1]
+
+        >>> radix_sort([])
+        []
     """
 
 

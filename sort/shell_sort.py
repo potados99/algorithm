@@ -20,6 +20,7 @@ def round_odd(number):
     Example:
         >>> round_odd(3)
         3
+
         >>> round_odd(4)
         5
     """
@@ -87,6 +88,9 @@ def shell_sort(collection, verbose=False):
 
         >>> shell_sort([-91, -123, -1])
         [-123, -91, -1]
+
+        >>> shell_sort([])
+        []
     """
 
     size = len(collection)

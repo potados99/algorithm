@@ -23,6 +23,9 @@ def cocktail_shaker(collection, verbose=False):
 
         >>> cocktail_shaker([-91, -123, -1])
         [-123, -91, -1]
+
+        >>> cocktail_shaker([])
+        []
     """
 
     size = len(collection)

@@ -23,6 +23,9 @@ def bubble_sort(collection, verbose=False):
 
         >>> bubble_sort([-91, -123, -1])
         [-123, -91, -1]
+
+        >>> bubble_sort([])
+        []
     """
 
     for i in range(0, len(collection) - 1):
