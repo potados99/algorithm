@@ -1,4 +1,4 @@
-"""This module contains heap_sort and its helper functions.
+"""This module contains heap_sort and other helper functions.
 
 You can run a test using this command:
     python3 -m doctest heap_sort.py -v
