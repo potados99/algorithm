@@ -20,7 +20,7 @@ def make_runs(collection):
         collection (list): The collection to create runs from.
 
     Returns:
-        list: A list consists of start/end index pair of each runs.
+        list: A list consists of start/end index pair of each runs. Must not be empty.
 
     Example:
         >>> make_runs([8, 9, 6, 7, 3, 4, 1, 5])
@@ -31,7 +31,11 @@ def make_runs(collection):
         [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)]
         >>> make_runs([1, 2, 3, 5, 4])
         [(0, 3), (4, 4)]
+        >>> make_runs([])
     """
+
+    if len(collection) == 0:
+        return
 
     runs = []
     last_item = collection[0]
@@ -69,9 +73,13 @@ def natural_merge_sort(collection, verbose=False):
 
         >>> natural_merge_sort([32, 13, 46, 78, 96, 15, 27])
         [13, 15, 27, 32, 46, 78, 96]
+
+        >>> natural_merge_sort([])
+        []
     """
 
-    # natural_merge_sort_recursive(collection, 0, len(collection) - 1, verbose, 0)
+    if len(collection) == 0:
+        return collection
 
     runs = make_runs(collection)
 

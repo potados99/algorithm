@@ -11,6 +11,11 @@ def elapsed_time(body):
 
 
 def average(collection):
+    """
+    Example:
+        >>> average([3, 4, 5])
+        4.0
+    """
     return sum(collection) / len(collection)
 
 
@@ -19,10 +24,20 @@ def random_list(size):
 
 
 def ordered_list(size):
-    return list(range(1, size))
+    """
+    Example:
+        >>> ordered_list(4)
+        [1, 2, 3, 4]
+    """
+    return list(range(1, size + 1))
 
 
 def reverse_ordered_list(size):
+    """
+    Example:
+        >>> reverse_ordered_list(4)
+        [4, 3, 2, 1]
+    """
     return list(range(size, 0, -1))
 
 
