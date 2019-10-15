@@ -7,8 +7,8 @@ or just
 """
 
 
-# This module can be executed as both module and script.
-if __name__ == "__main__":
+# This module can be executed as module and script and by doctest.
+if __name__ == "__main__" or __name__ == "heap_sort":
     from common.util import *
 else:
     from .common.util import *

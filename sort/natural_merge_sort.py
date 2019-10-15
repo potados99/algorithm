@@ -6,8 +6,8 @@ or just
 python3 natural_merge_sort.py [--verbose]
 """
 
-# This module can be executed as both module and script.
-if __name__ == "__main__":
+# This module can be executed as module and script and by doctest.
+if __name__ == "__main__" or __name__ == "natural_merge_sort":
     from merge_sort import merge
 else:
     from .merge_sort import merge
