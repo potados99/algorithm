@@ -8,39 +8,6 @@ python3 natural_merge_sort.py [--verbose]
 
 from merge_sort import merge
 
-# Deprecated
-def find_two_runs(collection, prev_run_end, until, verbose=False, level=0):
-    """Find first two sorted subarray from collection.
-
-    Example:
-        >>> find_two_runs([3, 2, 5, 9, 7, 8], 0, 5, False, 0)
-        (0, 0, 3)
-        >>> find_two_runs([3, 2, 5, 9, 7, 8], 1, 5, False, 0)
-        (0, 3, 5)
-        >>> find_two_runs([1, 2, 3, 4], 0, 3, False, 0)
-        (0, -1, 3)
-    """
-
-    i = prev_run_end
-    run_starts = []
-    last_item = collection[i]
-
-    while i <= until:
-        if collection[i] < last_item:
-            run_starts.append(i)
-            if len(run_starts) >= 2:
-                return (0, run_starts[0] - 1, run_starts[1] - 1)
-
-        last_item = collection[i]
-        i += 1
-
-    if len(run_starts) >= 1:
-        # The second run finishes with the end of collection.
-        return (0, run_starts[0] - 1, until)
-    else:
-        # All sorted.
-        return (0, -1, until)
-
 
 def make_runs(collection):
     """Make list of pair of start/end index of runs.
