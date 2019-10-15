@@ -7,6 +7,13 @@ or just
 """
 
 
+# This module can be executed as module and script and by doctest.
+if __name__ == "__main__" or __name__ == "[blahblah]":
+    pass # absolute import
+else:
+    pass # relative import
+
+
 def [blahblah](collection, verbose=False):
     """Implementation of [blahblah] in Python.
 
