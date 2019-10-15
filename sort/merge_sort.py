@@ -126,7 +126,7 @@ def merge_sort(collection, verbose=False):
         [-123, -91, -1]
     """
 
-    merge_sort_recursive(collection, 0, len(collection) - 1, verbose)
+    merge_sort_recursive(collection, 0, len(collection) - 1, verbose, 0)
 
     return collection
 
