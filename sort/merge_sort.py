@@ -1,10 +1,21 @@
-"""This module contains a single function: merge_sort.
+"""This module contains two functions: merge_sort, merge_sort_recursive, merge.
 
 You can run a test using this command:
     python3 -m doctest merge_sort.py -v
 or just
     python3 merge_sort.py [--verbose]
 """
+
+
+def merge(collection, left, middle, right):
+    pass
+
+
+def merge_sort_recursive(collection, left, right):
+    middle = left + ((right - left) >> 2)
+
+
+    pass
 
 
 def merge_sort(collection, verbose=False):
@@ -24,7 +35,6 @@ def merge_sort(collection, verbose=False):
         >>> merge_sort([-91, -123, -1])
         [-123, -91, -1]
     """
-
 
     return collection
 
