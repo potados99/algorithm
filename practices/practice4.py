@@ -9,14 +9,15 @@ Run it using following command:
 """
 
 
-import sys; sys.path.append('..')
+import sys;
+import os.path as o
+sys.path.append(o.abspath(o.join(o.dirname(sys.modules[__name__].__file__), "..")))
 
 from sort.common.dump import *
 from sort.merge_sort import *
 from sort.natural_merge_sort import *
 from sort.tournament_sort import *
 from sort.heap_sort import *
-
 
 def dump_all(x_range):
     dump_sort_function("Merge Sort", merge_sort, x_range, y_limit=100)

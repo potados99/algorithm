@@ -1,5 +1,6 @@
 import argparse
 
+
 def from_input(verbosable_sort_function):
     """Invoke sort function with input data from user's shell.
 

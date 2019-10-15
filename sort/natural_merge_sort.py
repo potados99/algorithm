@@ -6,8 +6,11 @@ or just
 python3 natural_merge_sort.py [--verbose]
 """
 
-
-from merge_sort import merge
+# This module can be executed as both module and script.
+if __name__ == "__main__":
+    from merge_sort import merge
+else:
+    from .merge_sort import merge
 
 
 def make_runs(collection):

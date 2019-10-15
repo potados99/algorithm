@@ -7,7 +7,11 @@ or just
 """
 
 
-from common.util import *
+# This module can be executed as both module and script.
+if __name__ == "__main__":
+    from common.util import *
+else:
+    from .common.util import *
 
 
 def max_heapify(collection, root, heap_size):

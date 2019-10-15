@@ -1,4 +1,5 @@
-from util import *
+# This module will never be executed as a script.
+from .util import *
 
 
 def dump_elapsed_time(name, sorting_function, collection):
