@@ -92,8 +92,6 @@ def natural_merge_sort(collection, verbose=False):
         i = 0
         merged_runs = []
 
-        if verbose: print("Merge stage " + str(i + 1))
-
         while i < len(runs):
             # Leave last single item to the next stage.
             if i + 1 >= len(runs):
@@ -110,7 +108,7 @@ def natural_merge_sort(collection, verbose=False):
                 + " and "
                 + str(collection[middle+1:right+1]))
 
-            merge(collection, left, middle, right)
+            merge(collection, left, middle, right, verbose, 2)
             merged_runs.append((left, right))
 
             i += 2
