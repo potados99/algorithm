@@ -40,6 +40,9 @@ def match(collection, left, right, index_mapper=lambda x: x):
         collection (list): A collection that contains players.
         left (int): Index of a player at left.
         right (int): Index of a player at right.
+        index_mapper (int -> int): Mapper to map given index left and right
+        to the index of the collection. We do not directly pass the index of items
+        in collection, so we might need the index mapper.
 
     Returns:
         int: Index of the winner in the collection.
