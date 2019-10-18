@@ -47,3 +47,9 @@ def copy_list(origin):
 
 def swap(list, a, b):
     list[a], list[b] = list[b], list[a]
+
+
+def print_padding(string, padding, char=' ', end="\n"):
+    print(char * padding, end="")
+    print(string, end="")
+    print(char * (padding - 1), end=end)

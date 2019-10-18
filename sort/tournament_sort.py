@@ -64,6 +64,27 @@ def match(collection, left, right, index_mapper=lambda x: x):
     return left if collection[left] <= collection[right] else right
 
 
+def print_tournament_tree(collection, tree):
+    if len(collection) == 0:
+        print("Tree empty.")
+        return
+
+    line_capacity = 1
+    line_count = 0
+    padding = 2**ceil(log2(len(tree)))
+
+    for tree_index in range(len(tree) - 1, -1, -1):
+        element = "*" if tree[tree_index] is None else str(collection[tree[tree_index]])
+        print_padding(element, padding, end="")
+
+        line_count += 1
+        if line_count >= line_capacity:
+            print("")
+            padding //= 2
+            line_capacity *= 2
+            line_count = 0
+
+
 def construct_tournament_tree(collection):
     """Build a tournament tree from given items in collection.
     This function modifies the collection.
@@ -178,10 +199,23 @@ def tournament_sort(collection, verbose=False):
     output = []
     tree = construct_tournament_tree(collection)
 
-    # Root of the tree points the minumum value in the collection.
+    if verbose:
+        print("Tournament tree constructed:")
+        print_tournament_tree(collection, tree)
+        print("")
+
+    # Root of the tree points to the minumum value in the collection.
     winner_index = tree[-1]
 
     while winner_index is not None:
+        if verbose:
+            print("Run tournament.")
+            print("Winner is " + str(collection[winner_index]) + ".")
+            print("The tree looks like:")
+            print_tournament_tree(collection, tree)
+            print("")
+
+        # Add winner to the output.
         output.append(collection[winner_index])
 
         # The winner_index is not only an index of collection,
@@ -201,6 +235,3 @@ def tournament_sort(collection, verbose=False):
 if __name__ == "__main__":
     from common.invoker import from_input
     from_input(tournament_sort)
-
-    #x = random_list(2000)
-    #print(tournament_sort(x))
