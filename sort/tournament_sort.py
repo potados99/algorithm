@@ -93,14 +93,15 @@ def construct_tournament_tree(collection):
     This function modifies the collection.
 
     The tree will be represented in a list, from the leafs, not the root.
-    Like: [2, 1, 3, *, 5, 6, 7] represents
+    For example, [2, 1, 3, *, 5, 6, 7] represents a tree below:
+
                 7
         5               6
     2       1       3       *
 
     In this representation the index of the left child is (2i - l - 1),
     where l is total heap size, and that of the right child is (2i - l).
-    The index of the parent node will be (i + i) / 2.
+    The index of the parent node will be (i + l + 1) / 2.
 
     Args:
         collection (list): Initial data. They will not be modified.
