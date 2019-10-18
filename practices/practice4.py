@@ -26,4 +26,4 @@ def dump_all(x_range):
     dump_sort_function("Tournament Sort", tournament_sort, x_range, y_limit=60)
     dump_sort_function("Heap Sort", heap_sort, x_range, y_limit = 60)
 
-dump_all(range(1, 200, 5))
+dump_all(range(1, 1000, 5))

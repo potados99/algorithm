@@ -18,6 +18,8 @@ def max_heapify(collection, root, heap_size):
     """Make it a max heap.
     Assume that subtrees are max heap.
 
+    This is a bottom-up approach, so it requires subtrees to be heapified.
+
     Args:
         collection (list): Partially heapified tree.
         root (int): Index of node to use as root node.

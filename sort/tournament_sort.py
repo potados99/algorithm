@@ -13,6 +13,8 @@ if __name__ == "__main__" or __name__ == "tournament_sort":
 else:
     from .common.util import *
 
+from collections import deque
+
 
 def match(collection, left, right):
     """Match two players.
@@ -72,12 +74,14 @@ def run_tournament(collection, start, end):
         0
         >>> run_tournament([-1, -3, -2], 0, 2)
         1
+        >>> run_tournament(list(range(2000, -1, -1)), 0, 1999)
+        1999
     """
 
     if len(collection) == 0 or end < start:
         return
 
-    player_indices = list(range(0, len(collection)))[start:end+1]
+    player_indices = deque(list(range(0, len(collection)))[start:end+1])
 
     while len(player_indices) > 1:
         # Pop two.
@@ -88,7 +92,7 @@ def run_tournament(collection, start, end):
         winner = match(collection, player_left, player_right)
 
         # Push the winner
-        player_indices.insert(0, winner)
+        player_indices.appendleft(winner)
 
     return player_indices.pop()
 
@@ -129,5 +133,13 @@ def tournament_sort(collection, verbose=False):
 
 
 if __name__ == "__main__":
-    from common.invoker import from_input
-    from_input(tournament_sort)
+    # from common.invoker import from_input
+    # from_input(tournament_sort)
+
+    x = random_list(2000)
+    print(tournament_sort(x))
+
+"""
+[1,2,3,4,5]
+
+"""
