@@ -14,87 +14,144 @@ else:
     from .common.util import *
 
 from collections import deque
+from math import *
 
 
-def match(collection, left, right):
-    """Match two players.
+def left_child(collection, node):
+    return (2 * node) - len(collection) - 1
 
-    The smaller one wins.
+
+def right_child(collection, node):
+    return (2 * node) - len(collection)
+
+
+def parent(collection, node):
+    return (node + len(collection) + 1) // 2
+
+
+def match(collection, left, right, index_mapper=lambda x: x):
+    """Compare and return the winner.
+
+    The small one wins. If same, the left wins.
+    If one is None, the other one wins.
+    If both are None, the winner is None.
 
     Args:
-        collection (list): List of players.
-        left (int): Index of left player.
-        right (int): Index of right player.
+        collection (list): A collection that contains players.
+        left (int): Index of a player at left.
+        right (int): Index of a player at right.
 
     Returns:
-        int: Index of the winner.
-        The smaller one wins the match.
-        If two are same, the player at left wins.
-        Return nothing when collection is empty.
+        int: Index of the winner in the collection.
 
     Example:
-        >>> match([4,1,3,2,5], 1, 2)
+        >>> match([1, 2, 3, 4], 1, 3, lambda x: [4, 3, 2, 1][x])
         1
-        >>> match([], 2, 3)
-        >>> match([1, 1], 0, 1)
-        0
+        >>> match([1, 1, 1, 1], 0, 3, lambda x: [2, 2, 2, 2][x])
+        2
+    """
+
+    left = index_mapper(left)
+    right = index_mapper(right)
+
+    if left is None and right is None:
+        return None
+    elif left is None:
+        return right
+    elif right is None:
+        return left
+
+    return left if collection[left] <= collection[right] else right
+
+
+def construct_tournament_tree(collection):
+    """Build a tournament tree from given items in collection.
+    This function modifies the collection.
+
+    The tree will be represented in a list, from the leafs, not the root.
+    Like: [2, 1, 3, *, 5, 6, 7] represents
+                7
+        5               6
+    2       1       3       *
+
+    In this representation the index of the left child is (2i - l - 1),
+    where l is total heap size, and that of the right child is (2i - l).
+    The index of the parent node will be (i + i) / 2.
+
+    Args:
+        collection (list): Initial data. They will not be modified.
+
+    Returns:
+        list: A Tournament tree where each node holds item index of
+        original collection.
+
+    Example:
+        >>> construct_tournament_tree([2, 1, 3, 8, 5, 6, 7])
+        [0, 1, 2, 3, 4, 5, 6, None, 1, 2, 4, 6, 1, 4, 1]
+
+        >>> construct_tournament_tree([5, 4, 3, 2, 1])
+        [0, 1, 2, 3, 4, None, None, None, 1, 3, 4, None, 3, 4, 4]
     """
 
     if len(collection) == 0:
-        return
+        return [None]
 
-    if collection[left] <= collection[right]:
-        return left
-    else:
-        return right
+    # Get nearst 2^k >= len(collection), where k is integer.
+    designated_leaf_count = 2**ceil(log2(len(collection)))
+
+    # The size of the tree will be 2 * designated_leaf_count - 1.
+    heap_size = (designated_leaf_count * 2) + 1
+
+    # Indices of the collection.
+    indices = list(range(0, len(collection)))
+
+    # Empty part of leaf level.
+    padding = [None] * (designated_leaf_count - len(collection))
+
+    # A tree taht will be used as a tournament tree.
+    # Every element will hold a key to an element,
+    # which is the index of the item in collection.
+    tree = indices + padding
+
+    for i in range(0, heap_size - 3, 2):
+        winner = match(collection, i, i + 1, index_mapper=lambda x: tree[x])
+        tree.append(winner)
+
+    return tree
 
 
-def run_tournament(collection, start, end):
-    """Run match among all players in collection and get the final winner.
-    Simply saying it returns the index of the minimum value is the collection.
+def retrace_tournament_tree(collection, tree, node):
+    """Run a partial rematch from specific node to the root.
 
-    This function does not modify collection. It only derefers collection to
-    run a match: like comparing player at index 0 and other one at index 1.
+    Run a match beteen left child of node and right one of it.
+    Do it recursively until it gets to the root.
 
-    Arg:
-        collection (list): Collection of players to run matches.
-        start (int): Start index of collection to run matches.
-        end (int): Last index of collection to run matches.
-        verbose (bool): To print steps or not.
+    Args:
+        collection (list): Original data to refer.
+        tree (list): A tournament tree.
+        node (int): Index of node in the tree.
 
     Returns:
-        int: Index of minimum value(winner) in collection.
+        list: Retraced tournament tree. The tree modified.
 
     Example:
-        >>> run_tournament([9, 5, 3, 6, 1, 4], 0, 5)
-        4
-        >>> run_tournament([9, 5, 3, 6, 1, 4], 0, 3)
-        2
-        >>> run_tournament([1, 1, 1, 1], 0, 3)
-        0
-        >>> run_tournament([-1, -3, -2], 0, 2)
-        1
-        >>> run_tournament(list(range(2000, -1, -1)), 0, 1999)
-        1999
+        >>> retrace_tournament_tree([2, 1, 3, 8, 5, 6, 7], [0, None, 2, 3, 4, 5, 6, None, 1, 2, 4, 6, 1, 4, 1], 1)
+        [0, None, 2, 3, 4, 5, 6, None, 0, 2, 4, 6, 0, 4, 0]
     """
 
-    if len(collection) == 0 or end < start:
-        return
 
-    player_indices = deque(list(range(0, len(collection)))[start:end+1])
+    # Do when node is not a leaf node.
+    if node > (len(tree) // 2):
+        left = left_child(tree, node)
+        right = right_child(tree, node)
 
-    while len(player_indices) > 1:
-        # Pop two.
-        player_right = player_indices.pop()
-        player_left = player_indices.pop()
+        winner = match(collection, left, right, index_mapper=lambda x: tree[x])
+        tree[node] = winner
 
-        # Compare them.
-        winner = match(collection, player_left, player_right)
-
-        # Push the winner
-        player_indices.appendleft(winner)
-
-    return player_indices.pop()
+    if node < len(tree) - 1:
+        return retrace_tournament_tree(collection, tree, parent(tree, node))
+    else:
+        return tree
 
 
 def tournament_sort(collection, verbose=False):
@@ -118,28 +175,32 @@ def tournament_sort(collection, verbose=False):
         []
     """
 
-    for i in range(0, len(collection) - 1):
-        if verbose: print("Rotation " + str(i + 1))
+    output = []
+    tree = construct_tournament_tree(collection)
 
-        if verbose: print("    Run tournament from " + str(collection[i:len(collection)]))
-        min_index = run_tournament(collection, i, len(collection) - 1)
-        if verbose: print("    The winner is " + str(collection[min_index]))
+    # Root of the tree points the minumum value in the collection.
+    winner_index = tree[-1]
 
-        swap(collection, i, min_index)
-        if verbose: print("    Place " + str(collection[min_index]) + " at index " + str(i))
-        if verbose: print(collection)
+    while winner_index is not None:
+        output.append(collection[winner_index])
 
-    return collection
+        # The winner_index is not only an index of collection,
+        # but also an index of the tree.
+        # It is possible to locate index of the winner in the tree
+        # because the winner comes from the leaf and the leafs form
+        # a range from 0 to len(collection) - 1.
+        # Unless the root is None, we can figure out where the winner came from.
+        tree[winner_index] = None
+        retrace_tournament_tree(collection, tree, winner_index)
+
+        winner_index = tree[-1]
+
+    return output
 
 
 if __name__ == "__main__":
-    # from common.invoker import from_input
-    # from_input(tournament_sort)
+    from common.invoker import from_input
+    from_input(tournament_sort)
 
-    x = random_list(2000)
-    print(tournament_sort(x))
-
-"""
-[1,2,3,4,5]
-
-"""
+    #x = random_list(2000)
+    #print(tournament_sort(x))
