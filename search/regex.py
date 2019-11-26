@@ -95,8 +95,37 @@ def closure(nfa):
     return create_NFA(start_state, end_state)
 
 
-def to_NFA():
-    pass
+def to_NFA(postfix_exp):
+    if postfix_exp == "":
+        return from_epsilon()
+
+    stack = []
+
+    for c in postfix_exp:
+        if c == '*':
+            stack.append(closure(stack.pop()))
+            print("*!")
+            [print(str(i)) for i in stack]
+        elif c == '|':
+            right = stack.pop()
+            left = stack.pop()
+            stack.append(union(left, right))
+            print("|!")
+            [print(str(i)) for i in stack]
+        elif c == '.':
+            right = stack.pop()
+            left = stack.pop()
+            stack.append(concat(left, right))
+            print(".!")
+            [print(str(i)) for i in stack]
+        else:
+            stack.append(from_symbol(c))
+            print(str(c) + " !")
+            [print(str(i)) for i in stack]
+
+        [print(str(i)) for i in stack]
+
+    return stack.pop()
 
 
 def dump_NFA(nfa):
@@ -113,8 +142,8 @@ def dump_state(state):
     if len(state.transition) == 0 and len(state.epsilon_transitions) == 0:
         return
     else:
-        for tr in state.transition: dump_state(tr)
-        for etr in state.epsilon_transitions: dump_state(etr)
+        for symbol in state.transition: dump_state(state.transition[symbol])
+        for state in state.epsilon_transitions: dump_state(state)
 
 
 def regex(pattern, text, verbose=False):
@@ -137,6 +166,7 @@ def regex(pattern, text, verbose=False):
 
 
 if __name__ == "__main__":
+    """
     state_a = create_state(False)
     state_b = create_state(True)
 
@@ -152,6 +182,10 @@ if __name__ == "__main__":
     nfa_a_and_b = concat(nfa_a, nfa_b)
 
     dump_NFA(nfa_a_and_b)
+    """
+
+    nfa = to_NFA("ab∣*c.")
+    dump_NFA(nfa)
 
     #from common.invoker import from_input
     #from_input(regex)
