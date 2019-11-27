@@ -22,6 +22,29 @@ class State:
         else:
             next_states.append(self)
 
+    def dump(self, iterated=[]):
+        if self in iterated: return
+
+        print("State: " + str(self))
+        print("    is_end: " + str(self.is_end))
+        print("    transition: " + str(self.transition))
+        print("    epsilon_transitions: " + str(self.epsilon_transitions))
+        print("")
+
+        iterated.append(self)
+
+        if len(self.transition) == 0 and len(self.epsilon_transitions) == 0:
+            return
+        if self.is_end:
+            return
+        else:
+            for symbol in self.transition:
+                dump_state(self.transition[symbol], iterated)
+            for state in self.epsilon_transitions:
+                dump_state(self, iterated)
+
+
+
 class NFA:
     def __init__(self, start, end):
         self.start = start
@@ -105,23 +128,35 @@ class Pattern:
         self.infix_exp = infix_exp
 
     def parse(self):
-        return self.to_postfix(self.add_explicit_concat(self.infix_exp))
+        return self.to_postfix(self.infix_exp)
 
     def to_postfix(self, pattern):
-        """
-        abcd to a.b.c.d to ab.c.d.
-        """
+        explicit_pattern = self.add_explicit_concat(pattern)
 
+        stack = []
+        postfix_exp = ""
 
+        for c in explicit_pattern:
+            if self.is_operator(c):
+                preced = self.preced(c)
+                while len(stack) != 0 and self.preced(stack[-1]) >= preced:
+                    postfix_exp += stack.pop()
+                stack.append(c)
+            elif c == '(':
+                stack.append(c)
+            elif c == ')':
+                while len(stack) != 0 and stack[-1] != '(':
+                    postfix_exp += stack.pop()
+                stack.pop()
+            else:
+                postfix_exp += c
 
-        return "ab."
+        while len(stack) != 0:
+            postfix_exp += stack.pop()
+
+        return postfix_exp
 
     def add_explicit_concat(self, pattern):
-        """
-        (ab)c to (a.b).c
-        (a|b)c to (a|b).c
-        (b(ca))d to (b.(c.a)).d
-        """
         added = ""
 
         for i in range(0, len(pattern) - 1):
@@ -141,10 +176,15 @@ class Pattern:
         if self.is_char(char1) and char2 == '(': return True
         else: return False
 
-    def is_control(self, c): return c == '*' or c == '|' or c == '.'
-    def is_brace(self, c): return c == '(' or c == ')'
-    def is_char(self, c): return not self.is_control(c) and not self.is_brace(c)
+    def preced(self, c):
+        if c == '*': return 3
+        elif c == '.': return 2
+        elif c == '|': return 1
+        else: return 0
 
+    def is_operator(self, c): return c == '*' or c == '|' or c == '.'
+    def is_brace(self, c): return c == '(' or c == ')'
+    def is_char(self, c): return not self.is_operator(c) and not self.is_brace(c)
 
 class Matcher:
     def __init__(self, pattern):
@@ -165,8 +205,9 @@ class Matcher:
 
         return next((x for x in current_states if x.is_end), None) is not None
 
+    def dump(self):
+        pass
 
-#m = Matcher("a.b")
-#print(m.match("abcd"))
 
-print(Pattern("").add_explicit_concat("(c|(ab)).c.d"))
+m = Matcher("b*c")
+print(m.match("bbbc"))
