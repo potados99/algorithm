@@ -28,6 +28,7 @@ class NFA:
         self.end = end
 
 
+
 def create_state(is_end):
     return State(is_end)
 
@@ -194,6 +195,14 @@ def regex(pattern, text, verbose=False):
 
 
     return collection
+
+
+
+class Matcher:
+    def __init__(self, pattern:
+        self.pattern
+
+
 
 
 
