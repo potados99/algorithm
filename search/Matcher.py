@@ -105,9 +105,9 @@ class Pattern:
         self.infix_exp = infix_exp
 
     def parse(self):
-        return self.to_postfix(add_explicit_concat)
+        return self.to_postfix(self.add_explicit_concat(self.infix_exp))
 
-    def to_postfix(pattern):
+    def to_postfix(self, pattern):
         """
         abcd to a.b.c.d to ab.c.d.
         """
@@ -116,7 +116,7 @@ class Pattern:
 
         return "ab."
 
-    def add_explicit_concat(pattern):
+    def add_explicit_concat(self, pattern):
         """
         (ab)c to (a.b).c
         (a|b)c to (a|b).c
@@ -124,23 +124,26 @@ class Pattern:
         """
         added = ""
 
-        for idx, c in enumerate(pattern):
-            if c == '(':
-                pass
-            elif c == ')':
-                if idx >= len(pattern) - 1:
-                    break
-                if pattern[idx + 1] == ')'
-                    continue
-                else:
-                    added += '.'
+        for i in range(0, len(pattern) - 1):
+            char1 = pattern[i]
+            char2 = pattern[i + 1]
 
+            if i == 0: added += char1
+            if self.insert_needed(char1, char2): added += '.'
 
+            added += char2
 
-    def is_control(c):
-        return c == '*' or c == '|' or c == '.'
+        return added
 
+    def insert_needed(self, char1, char2):
+        if self.is_char(char1) and self.is_char(char2): return True
+        if char1 == ')' and self.is_char(char2): return True
+        if self.is_char(char1) and char2 == '(': return True
+        else: return False
 
+    def is_control(self, c): return c == '*' or c == '|' or c == '.'
+    def is_brace(self, c): return c == '(' or c == ')'
+    def is_char(self, c): return not self.is_control(c) and not self.is_brace(c)
 
 
 class Matcher:
@@ -163,5 +166,7 @@ class Matcher:
         return next((x for x in current_states if x.is_end), None) is not None
 
 
-m = Matcher("a.b")
-print(m.match("abcd"))
+#m = Matcher("a.b")
+#print(m.match("abcd"))
+
+print(Pattern("").add_explicit_concat("(c|(ab)).c.d"))
