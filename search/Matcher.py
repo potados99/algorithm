@@ -178,6 +178,8 @@ class Pattern:
         'a.b.c.d'
         >>> Pattern.add_explicit_concat("a(bcd)e")
         'a.(b.c.d).e'
+        >>> Pattern.add_explicit_concat("010(-*)((1|2|3|4|5|6|7|8|9|0)*)(-*)((1|2|3|4|5|6|7|8|9|0)*)")
+        '0.1.0.(-*).((1|2|3|4|5|6|7|8|9|0)*).(-*).((1|2|3|4|5|6|7|8|9|0)*)'
         """
         added = ""
 
@@ -211,6 +213,7 @@ class Pattern:
         if Pattern.is_char(char1) and Pattern.is_char(char2): return True
         if char1 == ')' and Pattern.is_char(char2): return True
         if Pattern.is_char(char1) and char2 == '(': return True
+        if char1 == ')' and char2 == '(': return True
         if char1 == '*' and char2 == '(': return True
         if char1 == '*' and Pattern.is_char(char2): return True
         else: return False
@@ -259,6 +262,8 @@ class Regex:
 
         index_start = 0
 
+        possible_answers = []
+
         for idx, c in enumerate(word):
             next_states = []
 
@@ -278,7 +283,14 @@ class Regex:
                 if verbose:
                     print("Search finished at " + str(idx) + "!")
                     print(word[0:index_start] + "[" + word[index_start:idx+1] + "]" + word[idx+1:])
-                return (index_start, idx)
+                possible_answers.append((index_start, idx))
+
+        if len(possible_answers) == 0:
+            return None
+        else:
+            widths = list(map(lambda t: t[1] - t[0], possible_answers))
+            index_max_width = widths.index(max(widths))
+            return possible_answers[index_max_width]
 
         return None
 
