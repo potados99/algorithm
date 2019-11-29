@@ -22,28 +22,27 @@ class State:
         else:
             next_states.append(self)
 
-    def dump(self, iterated=[]):
-        if self in iterated: return
+    @staticmethod
+    def dump(state, iterated=[]):
+        if state in iterated: return
 
-        print("State: " + str(self))
-        print("    is_end: " + str(self.is_end))
-        print("    transition: " + str(self.transition))
-        print("    epsilon_transitions: " + str(self.epsilon_transitions))
+        print("State: " + str(state))
+        print("    is_end: " + str(state.is_end))
+        print("    transition: " + str(state.transition))
+        print("    epsilon_transitions: " + str(state.epsilon_transitions))
         print("")
 
-        iterated.append(self)
+        iterated.append(state)
 
-        if len(self.transition) == 0 and len(self.epsilon_transitions) == 0:
+        if len(state.transition) == 0 and len(state.epsilon_transitions) == 0:
             return
-        if self.is_end:
+        if state.is_end:
             return
         else:
-            for symbol in self.transition:
-                dump_state(self.transition[symbol], iterated)
-            for state in self.epsilon_transitions:
-                dump_state(self, iterated)
-
-
+            for symbol in state.transition:
+                State.dump(state.transition[symbol], iterated)
+            for st in state.epsilon_transitions:
+                State.dump(st, iterated)
 
 class NFA:
     def __init__(self, start, end):
@@ -75,8 +74,7 @@ class NFA:
 
         for c in postfix_exp:
             if c == '*':
-                nfa = stack.pop()
-                stack.append(nfa.closure())
+                stack.append(stack.pop().closure())
             elif c == '|':
                 right = stack.pop()
                 left = stack.pop()
@@ -86,8 +84,7 @@ class NFA:
                 left = stack.pop()
                 stack.append(left.concat(right))
             else:
-                nfa = NFA.from_symbol(c)
-                stack.append(nfa)
+                stack.append(NFA.from_symbol(c))
 
         return stack.pop()
 
@@ -123,6 +120,10 @@ class NFA:
 
         return NFA(start_state, end_state)
 
+    def dump(self):
+        print("NFA dump from start: ")
+        State.dump(self.start)
+
 class Pattern:
     def __init__(self, infix_exp):
         self.infix_exp = infix_exp
@@ -130,16 +131,21 @@ class Pattern:
     def parse(self):
         return self.to_postfix(self.infix_exp)
 
-    def to_postfix(self, pattern):
-        explicit_pattern = self.add_explicit_concat(pattern)
+    @staticmethod
+    def to_postfix(pattern):
+        """
+        >>> Pattern.to_postfix("(a|b)*c")
+        'ab|*c.'
+        """
+        explicit_pattern = Pattern.add_explicit_concat(pattern)
 
         stack = []
         postfix_exp = ""
 
         for c in explicit_pattern:
-            if self.is_operator(c):
-                preced = self.preced(c)
-                while len(stack) != 0 and self.preced(stack[-1]) >= preced:
+            if Pattern.is_operator(c):
+                preced = Pattern.preced(c)
+                while len(stack) != 0 and Pattern.preced(stack[-1]) >= preced:
                     postfix_exp += stack.pop()
                 stack.append(c)
             elif c == '(':
@@ -156,7 +162,14 @@ class Pattern:
 
         return postfix_exp
 
-    def add_explicit_concat(self, pattern):
+    @staticmethod
+    def add_explicit_concat(pattern):
+        """
+        >>> Pattern.add_explicit_concat("abcd")
+        'a.b.c.d'
+        >>> Pattern.add_explicit_concat("a(bcd)e")
+        'a.(b.c.d).e'
+        """
         added = ""
 
         for i in range(0, len(pattern) - 1):
@@ -164,31 +177,56 @@ class Pattern:
             char2 = pattern[i + 1]
 
             if i == 0: added += char1
-            if self.insert_needed(char1, char2): added += '.'
+            if Pattern.insert_needed(char1, char2): added += '.'
 
             added += char2
 
         return added
 
-    def insert_needed(self, char1, char2):
-        if self.is_char(char1) and self.is_char(char2): return True
-        if char1 == ')' and self.is_char(char2): return True
-        if self.is_char(char1) and char2 == '(': return True
+    @staticmethod
+    def insert_needed(char1, char2):
+        """
+        >>> Pattern.insert_needed('*', 'c')
+        True
+        >>> Pattern.insert_needed('*', '.')
+        False
+        >>> Pattern.insert_needed('*', ')')
+        False
+        >>> Pattern.insert_needed('*', 'c')
+        True
+        >>> Pattern.insert_needed('a', '*')
+        False
+        >>> Pattern.insert_needed('a', '.')
+        False
+        """
+        if Pattern.is_char(char1) and Pattern.is_char(char2): return True
+        if char1 == ')' and Pattern.is_char(char2): return True
+        if Pattern.is_char(char1) and char2 == '(': return True
+        if char1 == '*' and char2 == '(': return True
+        if char1 == '*' and Pattern.is_char(char2): return True
         else: return False
 
-    def preced(self, c):
+    @staticmethod
+    def preced(c):
         if c == '*': return 3
         elif c == '.': return 2
         elif c == '|': return 1
         else: return 0
 
-    def is_operator(self, c): return c == '*' or c == '|' or c == '.'
-    def is_brace(self, c): return c == '(' or c == ')'
-    def is_char(self, c): return not self.is_operator(c) and not self.is_brace(c)
+    @staticmethod
+    def is_operator(c): return c == '*' or c == '|' or c == '.'
+
+    @staticmethod
+    def is_brace(c): return c == '(' or c == ')'
+
+    @staticmethod
+    def is_char(c): return not Pattern.is_operator(c) and not Pattern.is_brace(c)
 
 class Matcher:
     def __init__(self, pattern):
-        self.nfa = NFA.from_post_exp(Pattern(pattern).parse())
+        self.infix = pattern
+        self.postfix = Pattern(pattern).parse()
+        self.nfa = NFA.from_post_exp(self.postfix)
 
     def match(self, word):
         current_states = []
@@ -206,8 +244,13 @@ class Matcher:
         return next((x for x in current_states if x.is_end), None) is not None
 
     def dump(self):
+        print(self)
+        print("Matcher for pattern \"" + self.infix + "\".")
+        print("NFA:")
+        State.dump(self.nfa.start)
         pass
 
 
-m = Matcher("b*c")
-print(m.match("bbbc"))
+if __name__ == "__main__":
+    m = Matcher("b*c")
+    print(m.match(""))
