@@ -14,16 +14,25 @@ class State:
         self.transition[symbol] = to_state
 
     def add_next_state(self, next_states, visited):
+        """
+        Add all final states those can be reached with no symbol (epsilon).
+        """
         if len(self.epsilon_transitions) > 0:
-            for state in self.epsilon_transitions:
-                if not self in next_states:
-                    visited.append(self)
-                    state.add_next_state(next_states, visited)
+            for next in self.epsilon_transitions:
+                if not next in visited:
+                    visited.append(next)
+                    next.add_next_state(next_states, visited)
         else:
             next_states.append(self)
 
+    def dump(self):
+        print("State: " + str(self))
+        print("    is_end: " + str(self.is_end))
+        print("    transition: " + str(self.transition))
+        print("    epsilon_transitions: " + str(self.epsilon_transitions))
+
     @staticmethod
-    def dump(state, iterated=[]):
+    def dump_all(state, iterated=[]):
         if state in iterated: return
 
         print("State: " + str(state))
@@ -40,9 +49,9 @@ class State:
             return
         else:
             for symbol in state.transition:
-                State.dump(state.transition[symbol], iterated)
+                State.dump_all(state.transition[symbol], iterated)
             for st in state.epsilon_transitions:
-                State.dump(st, iterated)
+                State.dump_all(st, iterated)
 
 class NFA:
     def __init__(self, start, end):
@@ -122,7 +131,7 @@ class NFA:
 
     def dump(self):
         print("NFA dump from start: ")
-        State.dump(self.start)
+        State.dump_all(self.start)
 
 class Pattern:
     def __init__(self, infix_exp):
@@ -222,7 +231,7 @@ class Pattern:
     @staticmethod
     def is_char(c): return not Pattern.is_operator(c) and not Pattern.is_brace(c)
 
-class Matcher:
+class Regex:
     def __init__(self, pattern):
         self.infix = pattern
         self.postfix = Pattern(pattern).parse()
@@ -243,14 +252,56 @@ class Matcher:
 
         return next((x for x in current_states if x.is_end), None) is not None
 
+    def find(self, word, verbose=False):
+        original_states = []
+        self.nfa.start.add_next_state(original_states, [])
+        current_states = [x for x in original_states]
+
+        index_start = 0
+
+        for idx, c in enumerate(word):
+            next_states = []
+
+            for state in current_states:
+                if c in state.transition:
+                    state.transition[c].add_next_state(next_states, [])
+
+            if len(next_states) == 0:
+                if verbose:
+                    print("Search will resume from " + str(idx + 1) + "!")
+                index_start = idx + 1
+                next_states = [x for x in original_states]
+
+            current_states = next_states
+
+            if True in map(lambda st: st.is_end, current_states):
+                if verbose:
+                    print("Search finished at " + str(idx) + "!")
+                    print(word[0:index_start] + "[" + word[index_start:idx+1] + "]" + word[idx+1:])
+                return (index_start, idx)
+
+        return None
+
     def dump(self):
         print(self)
         print("Matcher for pattern \"" + self.infix + "\".")
         print("NFA:")
-        State.dump(self.nfa.start)
+        State.dump_all(self.nfa.start)
         pass
 
 
 if __name__ == "__main__":
-    m = Matcher("b*c")
-    print(m.match(""))
+    pattern = input("Enter your regex(* . | supported): ")
+    matcher = Regex(pattern)
+
+    text = input("Enter some texts to find from: ")
+
+    matched = matcher.match(text)
+    print("Does \"" + text + "\" match the pattern \"" + pattern + "\"? " + ("Yes." if matched else "No."))
+
+    if not matched:
+        location = matcher.find(text)
+        if location is not None:
+            print("But pattern is found in the text: " + text[0:location[0]] + "[" + text[location[0]:location[1]+1] + "]" + text[location[1]+1:])
+        else:
+            print("Pattern is not found in the text!")
