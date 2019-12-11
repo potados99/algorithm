@@ -20,15 +20,20 @@ class Point:
 
     @staticmethod
     def create_random_points(size, n_points):
+        """
+        Every point is unique.
+        """
         points = list()
-        for i in range(0, n_points):
+
+        while len(points) < size:
             x = int(random.randint(0, size - 1))
             y = int(random.randint(0, size - 1))
             p = Point(x, y)
-            points.append(p)
+            if p not in points:
+                points.append(p)
 
         # No duplicates.
-        return list(set(points))
+        return points
 
     @staticmethod
     def dump_points(m, width=2):
