@@ -177,7 +177,7 @@ class Dict:
                 parent.left = new_node
 
         # Update header if new node becomes root.
-        if new_node.skipped_bit > self.head.skipped_bit:
+        if head_will_be_chagned:
             self.head = new_node
 
     def dump(self, root=None, visited=[]):
