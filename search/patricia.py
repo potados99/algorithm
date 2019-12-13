@@ -47,7 +47,13 @@ class Dict:
     >>> Dict.search_test(26)
     'Success'
     >>> Dict.insert_test()
-
+    Key: 19, Skipped bit: 4, Left: 9, Right: 26.
+    Key: 9, Skipped bit: 3, Left: 5, Right: 9.
+    Key: 5, Skipped bit: 2, Left: 3, Right: 5.
+    Key: 3, Skipped bit: 1, Left: 1, Right: 3.
+    Key: 1, Skipped bit: 0, Left: 1, Right: 1.
+    Key: 26, Skipped bit: 3, Left: 18, Right: 26.
+    Key: 18, Skipped bit: 0, Left: 18, Right: 19.
     """
     def __init__(self):
         self.key_min: Bitskey = Bitskey(-1)
@@ -157,13 +163,6 @@ class Dict:
         else:
             new_node.right = child
 
-
-        print("===============")
-        print(parent)
-        print(child)
-        print(new_node)
-        print("===============")
-
         # Set direction of the new node.
         parent_and_child_are_head = (parent == child and child == self.head)
         head_will_be_chagned = (new_node.skipped_bit > self.head.skipped_bit)
@@ -179,7 +178,6 @@ class Dict:
 
         # Update header if new node becomes root.
         if new_node.skipped_bit > self.head.skipped_bit:
-            print("YA!")
             self.head = new_node
 
     def dump(self, root=None, visited=[]):
@@ -227,13 +225,11 @@ class Dict:
         dict.insert(Bitskey(19))
         dict.insert(Bitskey(5))
         dict.insert(Bitskey(18))
-        #dict.insert(Bitskey(3))
-        #dict.insert(Bitskey(26))
-        #dict.insert(Bitskey(9))
+        dict.insert(Bitskey(3))
+        dict.insert(Bitskey(26))
+        dict.insert(Bitskey(9))
 
         dict.dump()
-
-
 
 
 if __name__ == "__main__":
