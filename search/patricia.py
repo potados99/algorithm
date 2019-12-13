@@ -59,17 +59,22 @@ class Dict:
 
         while parent.skipped_bit > child.skipped_bit:
             parent = child
+
             if verbose:
                 print("Step down to next level.")
                 print("Skipped bit is at " + str(child.skipped_bit) + ".")
-                print(key)
-                print(child)
+
             if key.cmp(offset=child.skipped_bit, operand=1):
                 if verbose: print("Go right.")
                 child = child.right
             else:
                 if verbose: print("Go left.")
                 child = child.left
+
+            if verbose:
+                print("")
+                print("[Parent] " + str(parent))
+                print("[Child] " + str(child))
 
         if key.get() == child.key.get():
             if verbose:
