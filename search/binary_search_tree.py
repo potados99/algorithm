@@ -1,6 +1,5 @@
 from Tree import Node
 
-
 class BinarySearchTree:
     """
     >>> BinarySearchTree.equals_test()

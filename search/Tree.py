@@ -61,3 +61,28 @@ class Node:
 
     def __hash__(self):
         return hash(('key', self.key, 'left', self.left.key if self.left is not None else None, 'right', self.right.key if self.right is not None else None))
+
+
+class RBNode(Node):
+    BLACK = 0
+    RED = 1
+
+    def __init__(self, key, color=BLACK, left=None, right=None):
+        Node.__init__(self, key=key, left=left, right=right)
+        self.color = color
+
+    def __str__(self):
+        color = "BLACK" if self.color == self.BLACK else "RED"
+        left = str(self.left.key) if self.left is not None else "-"
+        right = str(self.right.key) if self.right is not None else "-"
+        return "Key: " + str(self.key) + ", Color: " + color + ", Left: " + left + ", Right: " + right + "."
+
+    def __eq__(self, other):
+        if type(self) != type(other):
+            # Only accepts same type.
+            return False
+
+        return Node.__eq__(self, other) and self.color == other.color
+
+    def __hash__(self):
+        return hash(('key', self.key, 'color', self.color, 'left', self.left.key if self.left is not None else None, 'right', self.right.key if self.right is not None else None))
