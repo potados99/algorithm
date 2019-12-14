@@ -11,9 +11,22 @@ class RBTree:
     def __init__(self):
         self.root = None
 
-    def search(self, key_to_find):
+    # Tested.
+    def is_empty():
+        return (self.root is None)
 
-        pass
+    # Tested.
+    def search(self, key_to_find, verbose=False):
+        """
+        Perform a binary search on this RB tree.
+        Return None if not found.
+        """
+        if self.is_empty():
+            return None
 
-    def insert(self, key_to_insert):
+        return binary_search(root=self.root, key_to_find=key_to_find, find_closest=False, verbose=verbose)
+
+
+    def insert(self, key_to_insert, verbose=False):
+        
         pass

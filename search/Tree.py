@@ -5,51 +5,6 @@ Tested 2019.12.14.
 """
 
 # Tested.
-class TreeUtil:
-    """
-    Useful methods for tree indexing in array(list) organization.
-    """
-    #Tested.
-    @staticmethod
-    def left(root: int):
-        """
-        >>> TreeUtil.left(0)
-        1
-        >>> TreeUtil.left(1)
-        3
-        >>> TreeUtil.left(3)
-        7
-        """
-        return (root << 1) + 1
-
-    #Tested.
-    @staticmethod
-    def right(root: int):
-        """
-        >>> TreeUtil.right(0)
-        2
-        >>> TreeUtil.right(1)
-        4
-        >>> TreeUtil.right(3)
-        8
-        """
-        return (root << 1) + 2
-
-    #Tested.
-    @staticmethod
-    def parent(child: int):
-        """
-        >>> TreeUtil.parent(3)
-        1
-        >>> TreeUtil.parent(4)
-        1
-        >>> TreeUtil.parent(2)
-        0
-        """
-        return (child - 1) >> 1
-
-
-# Tested.
 class Node:
     """
     >>> Node(3) == Node(3)
@@ -113,6 +68,45 @@ class RBNode(Node):
         return hash(('key', self.key, 'color', self.color, 'left', self.left.key if self.left is not None else None, 'right', self.right.key if self.right is not None else None))
 
 
+#Tested.
+def left(root: int):
+    """
+    >>> TreeUtil.left(0)
+    1
+    >>> TreeUtil.left(1)
+    3
+    >>> TreeUtil.left(3)
+    7
+    """
+    return (root << 1) + 1
+
+
+#Tested.
+def right(root: int):
+    """
+    >>> TreeUtil.right(0)
+    2
+    >>> TreeUtil.right(1)
+    4
+    >>> TreeUtil.right(3)
+    8
+    """
+    return (root << 1) + 2
+
+
+#Tested.
+def parent(child: int):
+    """
+    >>> TreeUtil.parent(3)
+    1
+    >>> TreeUtil.parent(4)
+    1
+    >>> TreeUtil.parent(2)
+    0
+    """
+    return (child - 1) >> 1
+
+
 # Tested.
 def binary_search(root: Node, key_to_find, find_closest=True, verbose=False):
         """
@@ -149,6 +143,22 @@ def binary_search(root: Node, key_to_find, find_closest=True, verbose=False):
         else:
             # Found
             return None if find_closest else current_node
+
+
+# Tested
+def dump(root, visited=None, verbose=True):
+    if root is None:
+        return
+
+    if visited is not None and root not in visited:
+        # Useful when we want a list of nodes.
+        visited.append(root)
+
+    if verbose:
+        print(root)
+
+    dump(root=root.left, visited=visited, verbose=verbose)
+    dump(root=root.right, visited=visited, verbose=verbose)
 
 
 if __name__ == "__main__":

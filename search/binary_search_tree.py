@@ -76,22 +76,8 @@ class BinarySearchTree:
             closest_node.right = new_node
 
     # Tested
-    def dump(self, root=0, visited=None, verbose=True):
-        if root == 0:
-            root = self.root
-
-        if root is None:
-            return
-
-        if visited is not None and root not in visited:
-            # Useful when we want a list of nodes.
-            visited.append(root)
-
-        if verbose:
-            print(root)
-
-        self.dump(root=root.left, visited=visited, verbose=verbose)
-        self.dump(root=root.right, visited=visited, verbose=verbose)
+    def dump(self, visited=None, verbose=True):
+        dump(self.root, visited=visited, verbose=verbose)
 
     @staticmethod
     def equals_test():
