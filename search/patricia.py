@@ -47,10 +47,11 @@ class Node:
         self.skipped_bit: int = skipped_bit
 
     def __str__(self):
-        left = str(self.left.key) if self.left is not None else "-"
-        right = str(self.right.key) if self.right is not None else "-"
+        key = str(chr(self.key.get() + 64)) + "(" + str(bin(self.key.get())) + ")"
+        left = str(chr(self.left.key.get() + 64)) + "(" + str(bin(self.left.key.get())) + ")" if self.left is not None else "-"
+        right = str(chr(self.right.key.get() + 64)) + "(" + str(bin(self.right.key.get())) + ")" if self.right is not None else "-"
 
-        return "Key: " + str(self.key) + ", Skipped bit: " + str(self.skipped_bit) + ", Left: " + left + ", Right: " + right + "."
+        return "Key: " + key + ", Skipped bit: " + str(self.skipped_bit) + ", Left: " + left + ", Right: " + right + "."
 
 
 # Tested.
@@ -98,6 +99,15 @@ class Patricia:
         If failed, it returns a closest node.
         We can limit the skipped bit using 'until'.
         """
+        if self.root.skipped_bit <= until:
+            # The BIG one is comming...
+            if verbose:
+                print("")
+                print("Target skipped_bit is big. Loop is not run.")
+                print("[Parent] " + str(self.root))
+                print("[Child] " + str(self.root))
+            return (self.root, self.root)
+
         parent: Node = self.root
         child: Node = self.select_child(key_to_find=key_to_find, parent=parent, verbose=verbose)
 
@@ -145,18 +155,35 @@ class Patricia:
             return self.key_min
 
     def insert(self, key_to_insert: Bitskey, max_width=14, verbose=False):
+        if verbose:
+            print("="*64)
+            print("Before:")
+            self.dump()
+            print("")
+
         if self.is_empty():
             # First time insert.
+            if verbose:
+                print("Empty!")
+
             skipped_bit = max_width
             while key_to_insert.cmp(skipped_bit, 0): skipped_bit -= 1
 
             self.root = Node(key=key_to_insert, skipped_bit=skipped_bit)
 
+            print("="*64 + "\n\n")
             return
 
         # Check if it exists.
-        closest_node: Node = self.find_closest_node(key_to_find=key_to_insert, verbose=verbose)
+        if verbose:
+            print("New key is " + str(key_to_insert))
+            print("\nSeeking for a closest node.")
+
+        closest_node: Node = self.find_closest_node(key_to_find=key_to_insert, verbose=False)
         if closest_node is None: return
+
+        if verbose:
+            print("Closest node is " + str(closest_node))
 
         # Find proper skipped_bit for the new key.
         skipped_bit = max_width
@@ -164,10 +191,21 @@ class Patricia:
             skipped_bit -= 1
 
         # Find proper parent and child. The new node will be between them.
-        parent, child = self.find_proper_parent_and_child(key_to_find=key_to_insert, skipped_bit=skipped_bit, verbose=verbose)
+        if verbose:
+            print("\nSkipped bit for a new node is " + str(skipped_bit))
+            print("\nSeeking for a proper parent and child.")
+
+        parent, child = self.find_proper_parent_and_child(key_to_find=key_to_insert, skipped_bit=skipped_bit, verbose=False)
+
+        if verbose:
+            print("Parent: " + str(parent))
+            print("Child: " + str(child))
 
         # Create new node.
         new_node: Node = Node(key=key_to_insert, skipped_bit=skipped_bit)
+
+        if verbose:
+            print("\nAdding " + str(new_node))
 
         # Set direction of the child node.
         if key_to_insert.cmp(new_node.skipped_bit, 1):
@@ -178,6 +216,10 @@ class Patricia:
         # Set direction of the new node.
         parent_and_child_are_root = (parent == child and child == self.root)
         root_will_be_chagned = (new_node.skipped_bit > self.root.skipped_bit)
+
+        if verbose:
+            if root_will_be_chagned:
+                print("!! Root will be changed !!")
 
         if parent_and_child_are_root and root_will_be_chagned:
             # Do nothing. It happens on the second insertion.
@@ -192,20 +234,31 @@ class Patricia:
         if root_will_be_chagned:
             self.root = new_node
 
-    def dump(self, root=None, visited=[]):
-        if root in visited:
-            return
+        if verbose:
+            print("\nAfter:")
+            self.dump()
+            print("="*64 + "\n\n")
 
+    def insert_char(self, char, verbose=False):
+        self.insert(key_to_insert=Bitskey(ord(char) - 64), verbose=verbose)
+
+    def dump(self, root=None, visited=None):
         if root is None:
             root = self.root
+
+        if visited is None:
+            visited = []
+
+        if root in visited:
+            return
 
         print(root)
         visited.append(root)
 
         if root.left != root:
-            self.dump(root.left)
+            self.dump(root.left, visited=visited)
         if root.right != root:
-            self.dump(root.right)
+            self.dump(root.right, visited=visited)
 
     @staticmethod
     def search_test(key_to_find=3):
@@ -245,5 +298,8 @@ class Patricia:
 
 
 if __name__ == "__main__":
-    import doctest
-    doctest.testmod(verbose=False)
+    tree = Patricia()
+
+    string = "BIGCOMPUTER"
+
+    [tree.insert_char(x, verbose=True) for x in string]

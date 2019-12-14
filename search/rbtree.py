@@ -72,7 +72,9 @@ class RBTree:
         else: closest.right = new_node
 
         # Check if we have to do something.
-        
+        sibling = new_node.sibling()
+        if sibling is not None and sibling.color == RBNode.RED:
+
 
 
 
