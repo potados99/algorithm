@@ -83,6 +83,11 @@ class RBNode(Node):
 
         return gp.right if self.parent == gp.left else gp.left
 
+    def sibling(self):
+        if self.parent.left == self:
+            return self.parent.right
+        else:
+            return self.parent.left
 
     @staticmethod
     def family_test():
@@ -100,8 +105,9 @@ class RBNode(Node):
         parent_test = (node1.parent == node8) and (node17.parent == node13)
         grandparent_test = (node17.grandparent() == node8)
         uncle_test = (node17.uncle() == node1)
+        sibling_test = (node13.sibling() == node1)
 
-        return "Success" if parent_test and grandparent_test and uncle_test else "Fail"
+        return "Success" if parent_test and grandparent_test and uncle_test and sibling_test else "Fail"
 
 #Tested.
 def left(root: int):
