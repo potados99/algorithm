@@ -43,13 +43,16 @@ class RBNode(Node):
     True
     >>> str(RBNode(3, color=RBNode.BLACK))
     'Key: 3, Color: BLACK, Left: -, Right: -.'
+    >>> RBNode.family_test()
+    'Success'
     """
     BLACK = 0
     RED = 1
 
-    def __init__(self, key, color=BLACK, left=None, right=None):
+    def __init__(self, key, color=BLACK, left=None, right=None, parent=None):
         Node.__init__(self, key=key, left=left, right=right)
         self.color = color
+        self.parent = parent
 
     def __str__(self):
         color = "BLACK" if self.color == self.BLACK else "RED"
@@ -62,20 +65,52 @@ class RBNode(Node):
             # Only accepts same type.
             return False
 
-        return Node.__eq__(self, other) and self.color == other.color
+        return Node.__eq__(self, other) and self.color == other.color and self.parent == other.parent
 
     def __hash__(self):
-        return hash(('key', self.key, 'color', self.color, 'left', self.left.key if self.left is not None else None, 'right', self.right.key if self.right is not None else None))
+        return hash(('key', self.key, 'color', self.color, 'left', self.left.key if self.left is not None else None, 'right', self.right.key if self.right is not None else None, 'parent', self.parent))
 
+    def grandparent(self):
+        if self.parent is None:
+            return None
+
+        return self.parent.parent
+
+    def uncle(self):
+        gp = self.grandparent()
+        if gp is None:
+            return None
+
+        return gp.right if self.parent == gp.left else gp.left
+
+
+    @staticmethod
+    def family_test():
+        node17 = RBNode(key=17, color=RBNode.RED)
+        node13 = RBNode(key=12, color=RBNode.BLACK, right=node17)
+        node1 = RBNode(key=1, color=RBNode.BLACK)
+        node8 = RBNode(key=8, color=RBNode.BLACK, left=node1, right=node13)
+
+        node17.parent = node13
+        node13.parent = node8
+        node1.parent = node8
+
+        root: Node = node8
+
+        parent_test = (node1.parent == node8) and (node17.parent == node13)
+        grandparent_test = (node17.grandparent() == node8)
+        uncle_test = (node17.uncle() == node1)
+
+        return "Success" if parent_test and grandparent_test and uncle_test else "Fail"
 
 #Tested.
 def left(root: int):
     """
-    >>> TreeUtil.left(0)
+    >>> left(0)
     1
-    >>> TreeUtil.left(1)
+    >>> left(1)
     3
-    >>> TreeUtil.left(3)
+    >>> left(3)
     7
     """
     return (root << 1) + 1
@@ -84,11 +119,11 @@ def left(root: int):
 #Tested.
 def right(root: int):
     """
-    >>> TreeUtil.right(0)
+    >>> right(0)
     2
-    >>> TreeUtil.right(1)
+    >>> right(1)
     4
-    >>> TreeUtil.right(3)
+    >>> right(3)
     8
     """
     return (root << 1) + 2
@@ -97,11 +132,11 @@ def right(root: int):
 #Tested.
 def parent(child: int):
     """
-    >>> TreeUtil.parent(3)
+    >>> parent(3)
     1
-    >>> TreeUtil.parent(4)
+    >>> parent(4)
     1
-    >>> TreeUtil.parent(2)
+    >>> parent(2)
     0
     """
     return (child - 1) >> 1
@@ -146,13 +181,15 @@ def binary_search(root: Node, key_to_find, find_closest=True, verbose=False):
 
 
 # Tested
-def dump(root, visited=None, verbose=True):
+def dump(root, visited=[], verbose=True):
     if root is None:
         return
 
-    if visited is not None and root not in visited:
-        # Useful when we want a list of nodes.
-        visited.append(root)
+    if visited is not None:
+        if root in visited:
+            return
+        else:
+            visited.append(root)
 
     if verbose:
         print(root)
