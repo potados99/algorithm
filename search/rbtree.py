@@ -51,7 +51,12 @@ class RBTree:
 
             # This change may affect other nodes(such as uncle).
             # So do this thing recursively from bottom to top.
-            self.split(root.parent)
+            if root.parent is None:
+                # This is the root node.
+                # Root node must be black.
+                root.color = RBNode.BLACK
+            else:
+                self.split(root.parent)
 
     def insert(self, key_to_insert, verbose=False):
         if self.is_empty():
@@ -72,6 +77,8 @@ class RBTree:
         else: closest.right = new_node
 
         # Check if we have to do something.
+
+        # If two sibling
         sibling = new_node.sibling()
         if sibling is not None and sibling.color == RBNode.RED:
 
