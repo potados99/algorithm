@@ -1,3 +1,4 @@
+# Tested.
 class TreeUtil:
     """
     Useful methods for tree indexing in array(list) organization.
@@ -5,11 +6,11 @@ class TreeUtil:
     @staticmethod
     def left(root: int):
         """
-        >>> Tree.left(0)
+        >>> TreeUtil.left(0)
         1
-        >>> Tree.left(1)
+        >>> TreeUtil.left(1)
         3
-        >>> Tree.left(3)
+        >>> TreeUtil.left(3)
         7
         """
         return (root << 1) + 1
@@ -17,11 +18,11 @@ class TreeUtil:
     @staticmethod
     def right(root: int):
         """
-        >>> Tree.right(0)
+        >>> TreeUtil.right(0)
         2
-        >>> Tree.right(1)
+        >>> TreeUtil.right(1)
         4
-        >>> Tree.right(3)
+        >>> TreeUtil.right(3)
         8
         """
         return (root << 1) + 2
@@ -29,17 +30,24 @@ class TreeUtil:
     @staticmethod
     def parent(child: int):
         """
-        >>> Tree.parent(3)
+        >>> TreeUtil.parent(3)
         1
-        >>> Tree.parent(4)
+        >>> TreeUtil.parent(4)
         1
-        >>> Tree.parent(2)
+        >>> TreeUtil.parent(2)
         0
         """
         return (child - 1) >> 1
 
 
+# Tested.
 class Node:
+    """
+    >>> Node(3) == Node(3)
+    True
+    >>> str(Node(4))
+    'Key: 4, Left: -, Right: -.'
+    """
     def __init__(self, key, left=None, right=None):
         self.key = key
         self.left = left
@@ -63,7 +71,14 @@ class Node:
         return hash(('key', self.key, 'left', self.left.key if self.left is not None else None, 'right', self.right.key if self.right is not None else None))
 
 
+# Tested.
 class RBNode(Node):
+    """
+    >>> RBNode(3, color=RBNode.BLACK) == RBNode(3, color=RBNode.BLACK)
+    True
+    >>> str(RBNode(3, color=RBNode.BLACK))
+    'Key: 3, Color: BLACK, Left: -, Right: -.'
+    """
     BLACK = 0
     RED = 1
 
@@ -86,3 +101,8 @@ class RBNode(Node):
 
     def __hash__(self):
         return hash(('key', self.key, 'color', self.color, 'left', self.left.key if self.left is not None else None, 'right', self.right.key if self.right is not None else None))
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(verbose=False)
