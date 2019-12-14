@@ -4,7 +4,7 @@ Binary search tree implementation using linked nodes.
 Tested 2019.12.14.
 """
 
-from tree import Node
+from tree import *
 
 # Tested.
 class BinarySearchTree:
@@ -45,41 +45,16 @@ class BinarySearchTree:
 
         return this_nodes == other_nodes
 
-    def find_node_top_down(self, key_to_find, find_closest=True, verbose=False):
+    # Tested
+    def search(self, key_to_find, verbose=False):
         """
-        Perform a binary search from root node.
-
-        Params:
-            key_to_find (comparable): A key to find in the tree.
-            find_closest (bool): Return the closest node if search failed.
-
-        Returns:
-            if key found and find_closest: the node.
-            if key found and not find_closest: None.
-            if key not found and find_closest: the closest node.
-            if key not found and not find_closest: None.
-
+        Perform a binary search on this BST.
+        Return None if not found.
         """
-        current_node: Node = self.root
-        last_node: Node = None
+        if self.is_empty():
+            return None
 
-        while current_node is not None:
-            if current_node.key == key_to_find:
-                return key_to_find
-
-            # In this BST implementation, nodes who are smaller than the key
-            # goes left, and those equal to or bigger than the key goes right.
-            go_left = (key_to_find < current_node.key)
-
-            last_node = current_node
-            current_node = current_node.left if go_left else current_node.right
-
-        if current_node is None:
-            # Not found
-            return last_node if find_closest else None
-        else:
-            # Found
-            return None if find_closest else current_node
+        return binary_search(root=self.root, key_to_find=key_to_find, find_closest=False, verbose=verbose)
 
     # Tested.
     def insert(self, key_to_insert, verbose=False):
@@ -87,7 +62,7 @@ class BinarySearchTree:
             self.root = Node(key=key_to_insert)
             return
 
-        closest_node: Node = self.find_node_top_down(key_to_find=key_to_insert, find_closest=True, verbose=verbose)
+        closest_node: Node = binary_search(root=self.root, key_to_find=key_to_insert, find_closest=True, verbose=verbose)
         if closest_node is None:
             # No closest node, meaning that there is already a node with the key to insert.
             return
@@ -99,17 +74,6 @@ class BinarySearchTree:
             closest_node.left = new_node
         else:
             closest_node.right = new_node
-
-    # Tested
-    def search(self, key_to_find, verbose=False):
-        """
-        Perform a binary search on this BST.
-        Return None if not found.
-        """
-        if self.is_empty():
-            return None
-
-        return self.find_node_top_down(key_to_find=key_to_find, find_closest=False, verbose=verbose)
 
     # Tested
     def dump(self, root=0, visited=None, verbose=True):

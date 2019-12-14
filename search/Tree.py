@@ -9,6 +9,7 @@ class TreeUtil:
     """
     Useful methods for tree indexing in array(list) organization.
     """
+    #Tested.
     @staticmethod
     def left(root: int):
         """
@@ -21,6 +22,7 @@ class TreeUtil:
         """
         return (root << 1) + 1
 
+    #Tested.
     @staticmethod
     def right(root: int):
         """
@@ -33,6 +35,7 @@ class TreeUtil:
         """
         return (root << 1) + 2
 
+    #Tested.
     @staticmethod
     def parent(child: int):
         """
@@ -108,6 +111,44 @@ class RBNode(Node):
 
     def __hash__(self):
         return hash(('key', self.key, 'color', self.color, 'left', self.left.key if self.left is not None else None, 'right', self.right.key if self.right is not None else None))
+
+
+# Tested.
+def binary_search(root: Node, key_to_find, find_closest=True, verbose=False):
+        """
+        Perform a binary search from root node.
+
+        Params:
+            key_to_find (comparable): A key to find in the tree.
+            find_closest (bool): Return the closest node if search failed.
+
+        Returns:
+            if key found and find_closest: the node.
+            if key found and not find_closest: None.
+            if key not found and find_closest: the closest node.
+            if key not found and not find_closest: None.
+
+        """
+        current_node: Node = root
+        last_node: Node = None
+
+        while current_node is not None:
+            if current_node.key == key_to_find:
+                return key_to_find
+
+            # In this BST implementation, nodes who are smaller than the key
+            # goes left, and those equal to or bigger than the key goes right.
+            go_left = (key_to_find < current_node.key)
+
+            last_node = current_node
+            current_node = current_node.left if go_left else current_node.right
+
+        if current_node is None:
+            # Not found
+            return last_node if find_closest else None
+        else:
+            # Found
+            return None if find_closest else current_node
 
 
 if __name__ == "__main__":
