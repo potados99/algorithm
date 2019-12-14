@@ -1,5 +1,6 @@
 """
 Patricia Tree implementation.
+Keywords: WOW, OOPS, FUCK
 
 Tested 2019.12.13.
 """
@@ -99,6 +100,12 @@ class Patricia:
         If failed, it returns a closest node.
         We can limit the skipped bit using 'until'.
         """
+
+        # OOPS 1
+        # If a key with HUGE skipped bit came into a tree,
+        # The parent and child selection below is wrong,
+        # because in that case we want root for both parent and Child
+        # But the below will select a child of the root by default.
         if self.root.skipped_bit <= until:
             # The BIG one is comming...
             if verbose:
@@ -108,6 +115,10 @@ class Patricia:
                 print("[Child] " + str(self.root))
             return (self.root, self.root)
 
+        # FUCK 1
+        # In the given source code by prof, the child selction before the Loop
+        # DOES NOT exits, but fixed to left.
+        # Oh my goodness...
         parent: Node = self.root
         child: Node = self.select_child(key_to_find=key_to_find, parent=parent, verbose=verbose)
 
@@ -179,35 +190,43 @@ class Patricia:
             print("New key is " + str(key_to_insert))
             print("\nSeeking for a closest node.")
 
+        # First we look for a closest node: a node that is taken at the end of
+        # a failed search.
+        # If a closest node is None, it means there is already a node with that key.
         closest_node: Node = self.find_closest_node(key_to_find=key_to_insert, verbose=False)
         if closest_node is None: return
 
         if verbose:
             print("Closest node is " + str(closest_node))
 
-        # Find proper skipped_bit for the new key.
+        # Once the closest node is given, we can get the skipped bit:
+        # The 'From where does the key differes from parents?' bit.
+        # The index is zero at LSB, increasing towards MSB.
         skipped_bit = max_width
         while closest_node.key.cmp(skipped_bit, 1) == key_to_insert.cmp(skipped_bit, 1):
             skipped_bit -= 1
 
-        # Find proper parent and child. The new node will be between them.
         if verbose:
             print("\nSkipped bit for a new node is " + str(skipped_bit))
             print("\nSeeking for a proper parent and child.")
 
+        # We have a skipped bit. So we can assume where the new node shuld go in.
+        # Find proper parent and child. The new node will be between them.
         parent, child = self.find_proper_parent_and_child(key_to_find=key_to_insert, skipped_bit=skipped_bit, verbose=False)
 
         if verbose:
             print("Parent: " + str(parent))
             print("Child: " + str(child))
 
-        # Create new node.
+        # The key, the place, and the skipped bit are fixed.
+        # Create a new node with given new key.
         new_node: Node = Node(key=key_to_insert, skipped_bit=skipped_bit)
 
         if verbose:
             print("\nAdding " + str(new_node))
 
-        # Set direction of the child node.
+        # The new node will go between the parent and child node.
+        # We have to set the direction of the child node (that has the new node as a parent node).
         if key_to_insert.cmp(new_node.skipped_bit, 1):
             new_node.left = child
         else:
@@ -300,6 +319,6 @@ class Patricia:
 if __name__ == "__main__":
     tree = Patricia()
 
-    string = "BIGCOMPUTER"
+    string = "BIGCOMPUTERS"
 
     [tree.insert_char(x, verbose=True) for x in string]
