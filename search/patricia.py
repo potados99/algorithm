@@ -1,3 +1,10 @@
+"""
+Patricia Tree implementation.
+
+Tested 2019.12.13.
+"""
+
+# Tested.
 class Bitskey:
     def __init__(self, val: int):
         self.val: int = val
@@ -31,6 +38,7 @@ class Bitskey:
         return hash(('val', self.val))
 
 
+# Tested.
 class Node:
     def __init__(self, key: Bitskey, left=None, right=None, skipped_bit: int=0):
         self.key: Bitskey = key
@@ -39,14 +47,18 @@ class Node:
         self.skipped_bit: int = skipped_bit
 
     def __str__(self):
-        return "Key: " + str(self.key) + ", Skipped bit: " + str(self.skipped_bit) + ", Left: " + str(self.left.key) + ", Right: " + str(self.right.key) + "."
+        left = str(self.left.key) if self.left is not None else "-"
+        right = str(self.right.key) if self.right is not None else "-"
+
+        return "Key: " + str(self.key) + ", Skipped bit: " + str(self.skipped_bit) + ", Left: " + left + ", Right: " + right + "."
 
 
-class Dict:
+# Tested.
+class Patricia:
     """
-    >>> Dict.search_test(26)
+    >>> Patricia.search_test(26)
     'Success'
-    >>> Dict.insert_test()
+    >>> Patricia.insert_test()
     Key: 19, Skipped bit: 4, Left: 9, Right: 26.
     Key: 9, Skipped bit: 3, Left: 5, Right: 9.
     Key: 5, Skipped bit: 2, Left: 3, Right: 5.
@@ -57,10 +69,10 @@ class Dict:
     """
     def __init__(self):
         self.key_min: Bitskey = Bitskey(-1)
-        self.head: Node = Node(self.key_min)
+        self.root: Node = Node(self.key_min)
 
     def is_empty(self):
-        return self.head.key == self.key_min
+        return self.root.key == self.key_min
 
     def select_child(self, key_to_find: Bitskey, parent: Bitskey, verbose=False):
         """
@@ -86,7 +98,7 @@ class Dict:
         If failed, it returns a closest node.
         We can limit the skipped bit using 'until'.
         """
-        parent: Node = self.head
+        parent: Node = self.root
         child: Node = self.select_child(key_to_find=key_to_find, parent=parent, verbose=verbose)
 
         while parent.skipped_bit > child.skipped_bit and child.skipped_bit > until:
@@ -138,7 +150,7 @@ class Dict:
             skipped_bit = max_width
             while key_to_insert.cmp(skipped_bit, 0): skipped_bit -= 1
 
-            self.head = Node(key=key_to_insert, skipped_bit=skipped_bit)
+            self.root = Node(key=key_to_insert, skipped_bit=skipped_bit)
 
             return
 
@@ -164,10 +176,10 @@ class Dict:
             new_node.right = child
 
         # Set direction of the new node.
-        parent_and_child_are_head = (parent == child and child == self.head)
-        head_will_be_chagned = (new_node.skipped_bit > self.head.skipped_bit)
+        parent_and_child_are_root = (parent == child and child == self.root)
+        root_will_be_chagned = (new_node.skipped_bit > self.root.skipped_bit)
 
-        if parent_and_child_are_head and head_will_be_chagned:
+        if parent_and_child_are_root and root_will_be_chagned:
             # Do nothing. It happens on the second insertion.
             pass
         else:
@@ -176,16 +188,16 @@ class Dict:
             else:
                 parent.left = new_node
 
-        # Update header if new node becomes root.
-        if head_will_be_chagned:
-            self.head = new_node
+        # Update rooter if new node becomes root.
+        if root_will_be_chagned:
+            self.root = new_node
 
     def dump(self, root=None, visited=[]):
         if root in visited:
             return
 
         if root is None:
-            root = self.head
+            root = self.root
 
         print(root)
         visited.append(root)
@@ -197,7 +209,7 @@ class Dict:
 
     @staticmethod
     def search_test(key_to_find=3):
-        dict: Dict = Dict()
+        dict: Patricia = Patricia()
 
         # As same as the textbook.
         node1: Node = Node(key=Bitskey(1), skipped_bit=0)
@@ -207,7 +219,7 @@ class Dict:
         node5: Node = Node(key=Bitskey(5), left=node3, skipped_bit=2)
         node19: Node = Node(key=Bitskey(19), left=node5, right=node26, skipped_bit=4)
 
-        dict.head = node19
+        dict.root = node19
         dict.key_min = Bitskey(1)
 
         result: Bitskey = dict.search(Bitskey(key_to_find), verbose=False)
@@ -219,7 +231,7 @@ class Dict:
 
     @staticmethod
     def insert_test():
-        dict: Dict = Dict()
+        dict: Patricia = Patricia()
 
         dict.insert(Bitskey(1))
         dict.insert(Bitskey(19))

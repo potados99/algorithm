@@ -1,3 +1,9 @@
+"""
+Some helpful things for tree implementation.
+
+Tested 2019.12.14.
+"""
+
 # Tested.
 class TreeUtil:
     """
@@ -56,6 +62,7 @@ class Node:
     def __str__(self):
         left = str(self.left.key) if self.left is not None else "-"
         right = str(self.right.key) if self.right is not None else "-"
+
         return "Key: " + str(self.key) + ", Left: " + left + ", Right: " + right + "."
 
     def __eq__(self, other):

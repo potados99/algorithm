@@ -1,5 +1,12 @@
+"""
+Binary search tree implementation using linked nodes.
+
+Tested 2019.12.14.
+"""
+
 from tree import Node
 
+# Tested.
 class BinarySearchTree:
     """
     >>> BinarySearchTree.equals_test()
@@ -21,12 +28,12 @@ class BinarySearchTree:
     Key: 9, Left: -, Right: -.
     """
     def __init__(self):
-        # Empty tree has no nodes, neither head.
-        self.head = None
+        # Empty tree has no nodes, neither root.
+        self.root = None
 
     # Tested.
     def is_empty(self):
-        return (self.head is None)
+        return (self.root is None)
 
     # Tested.
     def equals(self, other):
@@ -53,7 +60,7 @@ class BinarySearchTree:
             if key not found and not find_closest: None.
 
         """
-        current_node: Node = self.head
+        current_node: Node = self.root
         last_node: Node = None
 
         while current_node is not None:
@@ -76,8 +83,8 @@ class BinarySearchTree:
 
     # Tested.
     def insert(self, key_to_insert, verbose=False):
-        if self.head is None:
-            self.head = Node(key=key_to_insert)
+        if self.root is None:
+            self.root = Node(key=key_to_insert)
             return
 
         closest_node: Node = self.find_node_top_down(key_to_find=key_to_insert, find_closest=True, verbose=verbose)
@@ -107,7 +114,7 @@ class BinarySearchTree:
     # Tested
     def dump(self, root=0, visited=None, verbose=True):
         if root == 0:
-            root = self.head
+            root = self.root
 
         if root is None:
             return
@@ -132,7 +139,7 @@ class BinarySearchTree:
         tree1_node7 = Node(7, left=tree1_node6, right=tree1_node9)
         tree1_node3 = Node(3, left=tree1_node2, right=tree1_node4)
         tree1_node5 = Node(5, left=tree1_node3, right=tree1_node7)
-        tree1.head = tree1_node5
+        tree1.root = tree1_node5
 
         tree2 = BinarySearchTree()
         tree2_node9 = Node(9, left=None, right=None)
@@ -142,7 +149,7 @@ class BinarySearchTree:
         tree2_node7 = Node(7, left=tree2_node6, right=tree2_node9)
         tree2_node3 = Node(3, left=tree2_node2, right=tree2_node4)
         tree2_node5 = Node(5, left=tree2_node3, right=tree2_node7)
-        tree2.head = tree2_node5
+        tree2.root = tree2_node5
 
         return "Success" if tree1.equals(tree2) else "Fail"
 
@@ -158,7 +165,7 @@ class BinarySearchTree:
         node3 = Node(3, left=node2, right=node4)
         node5 = Node(5, left=node3, right=node7)
 
-        tree.head = node5
+        tree.root = node5
 
         result = tree.search(key_to_find)
         return "Success" if result == key_to_find else "Fail"
@@ -182,7 +189,7 @@ class BinarySearchTree:
         node7 = Node(7, left=node6, right=node9)
         node3 = Node(3, left=node2, right=node4)
         node5 = Node(5, left=node3, right=node7)
-        tree_by_hand.head = node5
+        tree_by_hand.root = node5
 
         return "Success" if tree.equals(tree_by_hand) else "Fail"
 
@@ -198,7 +205,7 @@ class BinarySearchTree:
         node3 = Node(3, left=node2, right=node4)
         node5 = Node(5, left=node3, right=node7)
 
-        tree.head = node5
+        tree.root = node5
 
         tree.dump()
 
