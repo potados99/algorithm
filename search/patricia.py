@@ -177,6 +177,7 @@ class Patricia:
             if verbose:
                 print("Empty!")
 
+            # When the tree is empty, the skipped bit would be the leftmost 1.
             skipped_bit = max_width
             while key_to_insert.cmp(skipped_bit, 0): skipped_bit -= 1
 
