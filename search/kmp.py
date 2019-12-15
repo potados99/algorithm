@@ -7,7 +7,6 @@ or just
 """
 
 
-
 def create_fsm(pattern, optimize=True, verbose=False):
     """ Create an optimized Finite State Machine.
 
@@ -64,6 +63,13 @@ def kmp(text, pattern, verbose=False):
     lps = 0
 
     while current_char_index < len(text) and lps < len(pattern):
+        if verbose:
+            print("")
+            print("Text:        ", end='')
+            print(text[0:current_char_index] + "[" + text[current_char_index] + "]" + text[current_char_index+1:])
+            print("Pattern:     ", end='')
+            print((" "*(current_char_index-lps)) + pattern[0:lps] + "[" + pattern[lps] + "]" + pattern[lps+1:])
+
         # The inner loop below might be reduced to a single if-statement
         # when the FSM is optimized (No need to keep jumping).
 
@@ -74,9 +80,16 @@ def kmp(text, pattern, verbose=False):
         while (lps >= 0) and (text[current_char_index] != pattern[lps]):
             comparisons += 1
             lps = next[lps]
+            if verbose:
+                print("Miss! lps is now " + str(lps) + ".")
+                print("Pattern:     ", end='')
+                print((" "*(current_char_index-max(lps, 0))) + pattern[0:max(lps, 0)] + "[" + pattern[max(lps, 0)] + "]" + pattern[max(lps, 0)+1:])
+
 
         current_char_index += 1
         lps += 1
+
+    print("")
 
     if lps == len(pattern):
         found_index = current_char_index - len(pattern)
