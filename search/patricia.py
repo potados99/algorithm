@@ -27,7 +27,7 @@ class Bitskey:
         """
         Compare a bit at 'offset'(from LSB) with 'operand'.
         """
-        return self.bits(offset, 1) == operand
+        return self.bits(offset=offset, mask=1) == operand
 
     def __str__(self):
         return str(self.val)
@@ -168,9 +168,10 @@ class Patricia:
     def insert(self, key_to_insert: Bitskey, max_width=14, verbose=False):
         if verbose:
             print("="*64)
-            print("Before:")
-            self.dump()
-            print("")
+            if not self.is_empty():
+                print("Before:")
+                self.dump()
+                print("")
 
         if self.is_empty():
             # First time insert.
@@ -320,6 +321,9 @@ class Patricia:
 if __name__ == "__main__":
     tree = Patricia()
 
-    string = "BIGCOMPUTERS"
+    string = "ABCD"
 
     [tree.insert_char(x, verbose=True) for x in string]
+
+    for x in string:
+        tree.insert_char(x, verbose=True)
