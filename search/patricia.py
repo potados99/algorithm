@@ -171,7 +171,7 @@ class Patricia:
             if not self.is_empty():
                 print("Before:")
                 self.dump()
-                print("")
+            print("")
 
         if self.is_empty():
             # First time insert.
@@ -196,7 +196,11 @@ class Patricia:
         # a failed search.
         # If a closest node is None, it means there is already a node with that key.
         closest_node: Node = self.find_closest_node(key_to_find=key_to_insert, verbose=False)
-        if closest_node is None: return
+        if closest_node is None:
+            if verbose:
+                print("The key already exists!")
+                print("="*64 + "\n\n")
+            return
 
         if verbose:
             print("Closest node is " + str(closest_node))
@@ -324,6 +328,3 @@ if __name__ == "__main__":
     string = "ABCD"
 
     [tree.insert_char(x, verbose=True) for x in string]
-
-    for x in string:
-        tree.insert_char(x, verbose=True)
