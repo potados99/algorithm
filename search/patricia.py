@@ -70,8 +70,9 @@ class Patricia:
     Key: 18, Skipped bit: 0, Left: 18, Right: 19.
     """
     def __init__(self):
-        self.key_min: Bitskey = Bitskey(-1)
-        self.root: Node = Node(self.key_min)
+        self.key_min: Bitskey = Bitskey(0)
+        self.node_min: Node = Node(self.key_min)
+        self.root: Node = self.node_min
 
     def is_empty(self):
         return self.root.key == self.key_min
@@ -182,9 +183,12 @@ class Patricia:
             skipped_bit = max_width
             while key_to_insert.cmp(skipped_bit, 0): skipped_bit -= 1
 
-            self.root = Node(key=key_to_insert, skipped_bit=skipped_bit)
+            #self.root = Node(key=key_to_insert, skipped_bit=skipped_bit, left=self.node_min, right=self.node_min)
+            self.root = Node(key=key_to_insert, skipped_bit=skipped_bit, left=self.node_min)
 
-            print("="*64 + "\n\n")
+            if verbose:
+                print("="*64 + "\n\n")
+
             return
 
         # Check if it exists.
@@ -271,6 +275,9 @@ class Patricia:
         if root is None:
             root = self.root
 
+        if root == self.node_min:
+            return
+
         if visited is None:
             visited = []
 
@@ -325,6 +332,14 @@ class Patricia:
 if __name__ == "__main__":
     tree = Patricia()
 
-    string = "MUQWF"
+
+    string = "MUQWFNGIHP"
 
     [tree.insert_char(x, verbose=True) for x in string]
+
+
+    """
+    nums = [1, 19, 5, 18, 3]
+
+    [tree.insert(Bitskey(x), verbose=True) for x in nums]
+    """
