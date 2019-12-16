@@ -189,7 +189,7 @@ class Patricia:
 
         # Check if it exists.
         if verbose:
-            print("New key is " + str(key_to_insert))
+            print("New key is " + str(chr(key_to_insert.get() + 64)) + "(" + str(key_to_insert.get()) + ")")
             print("\nSeeking for a closest node.")
 
         # First we look for a closest node: a node that is taken at the end of
@@ -325,6 +325,6 @@ class Patricia:
 if __name__ == "__main__":
     tree = Patricia()
 
-    string = "ABCD"
+    string = "MUQWF"
 
     [tree.insert_char(x, verbose=True) for x in string]
