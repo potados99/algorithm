@@ -171,7 +171,7 @@ class Patricia:
             if not self.is_empty():
                 print("Before:")
                 self.dump()
-            print("")
+                print("")
 
         if self.is_empty():
             # First time insert.
