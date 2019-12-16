@@ -183,7 +183,8 @@ class Patricia:
             skipped_bit = max_width
             while key_to_insert.cmp(skipped_bit, 0): skipped_bit -= 1
 
-            #self.root = Node(key=key_to_insert, skipped_bit=skipped_bit, left=self.node_min, right=self.node_min)
+            # For a new trie node, the leftmost child is unconnected (points to node_min)
+            # and the right link always leads back up to itself.
             self.root = Node(key=key_to_insert, skipped_bit=skipped_bit, left=self.node_min)
 
             if verbose:
