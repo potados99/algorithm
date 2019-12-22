@@ -1,5 +1,10 @@
 """
+This module contains regular expression implementation.
+
+You can run a test using this command:
+    python3 regex.py [--verbose]
 """
+
 
 class State:
     def __init__(self, is_end):
@@ -52,6 +57,7 @@ class State:
                 State.dump_all(state.transition[symbol], iterated)
             for st in state.epsilon_transitions:
                 State.dump_all(st, iterated)
+
 
 class NFA:
     def __init__(self, start, end):
@@ -132,6 +138,7 @@ class NFA:
     def dump(self):
         print("NFA dump from start: ")
         State.dump_all(self.start)
+
 
 class Pattern:
     def __init__(self, infix_exp):
@@ -234,13 +241,14 @@ class Pattern:
     @staticmethod
     def is_char(c): return not Pattern.is_operator(c) and not Pattern.is_brace(c)
 
+
 class Regex:
     def __init__(self, pattern):
         self.infix = pattern
         self.postfix = Pattern(pattern).parse()
         self.nfa = NFA.from_post_exp(self.postfix)
 
-    def match(self, word):
+    def match(self, word, verbose=False):
         current_states = []
         self.nfa.start.add_next_state(current_states, [])
 
@@ -312,7 +320,7 @@ if __name__ == "__main__":
     print("Does \"" + text + "\" match the pattern \"" + pattern + "\"? " + ("Yes." if matched else "No."))
 
     if not matched:
-        location = matcher.find(text)
+        location = matcher.find(text, verbose=True)
         if location is not None:
             print("But pattern is found in the text: " + text[0:location[0]] + "[" + text[location[0]:location[1]+1] + "]" + text[location[1]+1:])
         else:
