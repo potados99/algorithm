@@ -4,7 +4,6 @@ Some helpful things for tree implementation.
 Tested 2019.12.14.
 """
 
-# Tested.
 class Node:
     """
     >>> Node(3) == Node(3)
@@ -36,7 +35,6 @@ class Node:
         return hash(('key', self.key, 'left', self.left.key if self.left is not None else None, 'right', self.right.key if self.right is not None else None))
 
 
-# Tested.
 class RBNode(Node):
     """
     >>> RBNode(3, color=RBNode.BLACK) == RBNode(3, color=RBNode.BLACK)
@@ -109,7 +107,6 @@ class RBNode(Node):
 
         return "Success" if parent_test and grandparent_test and uncle_test and sibling_test else "Fail"
 
-#Tested.
 def left(root: int):
     """
     >>> left(0)
@@ -122,7 +119,6 @@ def left(root: int):
     return (root << 1) + 1
 
 
-#Tested.
 def right(root: int):
     """
     >>> right(0)
@@ -135,7 +131,6 @@ def right(root: int):
     return (root << 1) + 2
 
 
-#Tested.
 def parent(child: int):
     """
     >>> parent(3)
@@ -148,7 +143,6 @@ def parent(child: int):
     return (child - 1) >> 1
 
 
-# Tested.
 def binary_search(root: Node, key_to_find, find_closest=True, verbose=False):
         """
         Perform a binary search from root node.
@@ -162,14 +156,14 @@ def binary_search(root: Node, key_to_find, find_closest=True, verbose=False):
             if key found and not find_closest: None.
             if key not found and find_closest: the closest node.
             if key not found and not find_closest: None.
-
         """
         current_node: Node = root
         last_node: Node = None
 
         while current_node is not None:
             if current_node.key == key_to_find:
-                return key_to_find
+                # Found in the middle
+                break
 
             # In this BST implementation, nodes who are smaller than the key
             # goes left, and those equal to or bigger than the key goes right.
@@ -186,7 +180,6 @@ def binary_search(root: Node, key_to_find, find_closest=True, verbose=False):
             return None if find_closest else current_node
 
 
-# Tested
 def dump(root, visited=[], verbose=True):
     if root is None:
         return

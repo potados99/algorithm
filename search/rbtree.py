@@ -1,10 +1,17 @@
 """
-Red-black tree implementation.
+This module contains rb tree implementation using linked nodes.
 
-Not tested yet.
+You can run a test using this command:
+    python3 -m doctest rbtree.py -v
+or just
+    python3 rbtree.py [--verbose]
 """
 
-from tree import *
+# This module can be executed as module and script and by doctest.
+if __name__ == "__main__" or __name__ == "rbtree":
+    from common.tree import *
+else:
+    from .common.tree import *
 
 
 class RBTree:
@@ -213,5 +220,9 @@ class RBTree:
 
 
 if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
+    from common.invoker import from_input
+
+    tree = RBTree()
+    insert = lambda key, verbose: tree.insert(int(key), verbose)
+    search = lambda key, verbose: True if tree.search(int(key), verbose) is not None else False
+    from_input(insert, search)

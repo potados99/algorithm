@@ -18,6 +18,18 @@ class Point:
     def __hash__(self):
         return hash(('x', self.x, 'y', self.y))
 
+    def __str__(self):
+        return "({x}, {y})".format(x=self.x, y=self.y)
+
+    def dist_horizontal(self, other):
+        return (self.x - other.x)**2
+
+    def dist_vertical(self, other):
+        return (self.y - other.y)**2
+
+    def dist(self, other):
+        return self.dist_horizontal(other) + self.dist_vertical(other)
+
     @staticmethod
     def create_random_points(size, n_points):
         """
@@ -25,7 +37,7 @@ class Point:
         """
         points = list()
 
-        while len(points) < size:
+        while len(points) < n_points:
             x = int(random.randint(0, size - 1))
             y = int(random.randint(0, size - 1))
             p = Point(x, y)

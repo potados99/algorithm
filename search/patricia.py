@@ -1,11 +1,20 @@
 """
-Patricia Tree implementation.
+This module contains PATRICIA trie implementation.
 Keywords: WOW, OOPS, FUCK
 
-Tested 2019.12.13.
+You can run a test using this command:
+    python3 -m doctest patricia.py -v
+or just
+    python3 patricia.py [--verbose]
 """
 
-# Tested.
+# This module can be executed as module and script and by doctest.
+if __name__ == "__main__" or __name__ == "patricia":
+    from common.tree import *
+else:
+    from .common.tree import *
+
+
 class Bitskey:
     def __init__(self, val: int):
         self.val: int = val
@@ -39,12 +48,11 @@ class Bitskey:
         return hash(('val', self.val))
 
 
-# Tested.
-class Node:
+class PNode:
     def __init__(self, key: Bitskey, left=None, right=None, skipped_bit: int=0):
         self.key: Bitskey = key
-        self.left: Node = left if left is not None else self
-        self.right: Node = right if right is not None else self
+        self.left: PNode = left if left is not None else self
+        self.right: PNode = right if right is not None else self
         self.skipped_bit: int = skipped_bit
 
     def __str__(self):
@@ -55,24 +63,23 @@ class Node:
         return "Key: " + key + ", Skipped bit: " + str(self.skipped_bit) + ", Left: " + left + ", Right: " + right + "."
 
 
-# Tested.
 class Patricia:
     """
     >>> Patricia.search_test(26)
     'Success'
     >>> Patricia.insert_test()
-    Key: 19, Skipped bit: 4, Left: 9, Right: 26.
-    Key: 9, Skipped bit: 3, Left: 5, Right: 9.
-    Key: 5, Skipped bit: 2, Left: 3, Right: 5.
-    Key: 3, Skipped bit: 1, Left: 1, Right: 3.
-    Key: 1, Skipped bit: 0, Left: 1, Right: 1.
-    Key: 26, Skipped bit: 3, Left: 18, Right: 26.
-    Key: 18, Skipped bit: 0, Left: 18, Right: 19.
+    Key: S(0b10011), Skipped bit: 4, Left: I(0b1001), Right: Z(0b11010).
+    Key: I(0b1001), Skipped bit: 3, Left: E(0b101), Right: I(0b1001).
+    Key: E(0b101), Skipped bit: 2, Left: C(0b11), Right: E(0b101).
+    Key: C(0b11), Skipped bit: 1, Left: A(0b1), Right: C(0b11).
+    Key: A(0b1), Skipped bit: 0, Left: @(0b0), Right: A(0b1).
+    Key: Z(0b11010), Skipped bit: 3, Left: R(0b10010), Right: Z(0b11010).
+    Key: R(0b10010), Skipped bit: 0, Left: R(0b10010), Right: S(0b10011).
     """
     def __init__(self):
         self.key_min: Bitskey = Bitskey(0)
-        self.node_min: Node = Node(self.key_min)
-        self.root: Node = self.node_min
+        self.node_min: PNode = PNode(self.key_min)
+        self.root: PNode = self.node_min
 
     def is_empty(self):
         return self.root.key == self.key_min
@@ -116,14 +123,23 @@ class Patricia:
                 print("[Child] " + str(self.root))
             return (self.root, self.root)
 
+        # OOPS 3
+        if key_to_find == self.root.key:
+            return (self.root, self.root)
+
         # FUCK 1
         # In the given source code by prof, the child selction before the Loop
         # DOES NOT exits, but fixed to left.
         # Oh my goodness...
-        parent: Node = self.root
-        child: Node = self.select_child(key_to_find=key_to_find, parent=parent, verbose=verbose)
+        parent: PNode = self.root
+        child: PNode = self.select_child(key_to_find=key_to_find, parent=parent, verbose=verbose)
 
         while parent.skipped_bit > child.skipped_bit and child.skipped_bit > until:
+            # OOPS 3
+            # Missed this checking!
+            if child.key == key_to_find:
+                break
+
             parent = child
 
             if verbose:
@@ -138,7 +154,7 @@ class Patricia:
         """
         Find the closest node, the last node visited when search is failed.
         """
-        node: Node = self.find_node_top_down(key_to_find=key_to_find, verbose=verbose)[1]
+        node: PNode = self.find_node_top_down(key_to_find=key_to_find, verbose=verbose)[1]
         return node if node.key != key_to_find else None
 
     def find_proper_parent_and_child(self, key_to_find: Bitskey, skipped_bit: int, verbose=False):
@@ -147,7 +163,7 @@ class Patricia:
         """
         return self.find_node_top_down(key_to_find=key_to_find, until=skipped_bit, verbose=verbose)
 
-    def search(self, key_to_find: Bitskey, for_insert=False, verbose=False):
+    def search(self, key_to_find: Bitskey, verbose=False):
         """
         Perform a search using key.
 
@@ -157,14 +173,17 @@ class Patricia:
         Returns:
             Bitskey: Matching key on success, minimum key on failure.
         """
-        node: Node = self.find_node_top_down(key_to_find=key_to_find, verbose=verbose)[1]
+        node: PNode = self.find_node_top_down(key_to_find=key_to_find, verbose=verbose)[1]
 
         if key_to_find == node.key:
             if verbose: print("The key(" + str(key_to_find) + ") is found.")
-            return node.key
+            return Node
         else:
             if verbose: print("The key(" + str(key_to_find) + ") is not found.")
-            return self.key_min
+            return None
+
+    def search_char(self, char, verbose=False):
+        return self.search(key_to_find=Bitskey(ord(char) - 64), verbose=verbose)
 
     def insert(self, key_to_insert: Bitskey, max_width=14, verbose=False):
         if verbose:
@@ -181,12 +200,12 @@ class Patricia:
 
             # When the tree is empty, the skipped bit would be the leftmost 1.
             skipped_bit = max_width
-            while key_to_insert.cmp(skipped_bit, 0): skipped_bit -= 1
+            while skipped_bit > 0 and key_to_insert.cmp(skipped_bit, 0): skipped_bit -= 1
 
             # OOPS 2
             # For a new trie node, the leftmost child is unconnected (points to node_min)
             # and the right link always leads back up to itself.
-            self.root = Node(key=key_to_insert, skipped_bit=skipped_bit, left=self.node_min)
+            self.root = PNode(key=key_to_insert, skipped_bit=skipped_bit, left=self.node_min)
 
             if verbose:
                 print("="*64 + "\n\n")
@@ -201,7 +220,7 @@ class Patricia:
         # First we look for a closest node: a node that is taken at the end of
         # a failed search.
         # If a closest node is None, it means there is already a node with that key.
-        closest_node: Node = self.find_closest_node(key_to_find=key_to_insert, verbose=False)
+        closest_node: PNode = self.find_closest_node(key_to_find=key_to_insert, verbose=False)
         if closest_node is None:
             if verbose:
                 print("The key already exists!")
@@ -215,7 +234,7 @@ class Patricia:
         # The 'From where does the key differes from parents?' bit.
         # The index is zero at LSB, increasing towards MSB.
         skipped_bit = max_width
-        while closest_node.key.cmp(skipped_bit, 1) == key_to_insert.cmp(skipped_bit, 1):
+        while skipped_bit > 0 and closest_node.key.cmp(skipped_bit, 1) == key_to_insert.cmp(skipped_bit, 1):
             skipped_bit -= 1
 
         if verbose:
@@ -232,7 +251,7 @@ class Patricia:
 
         # The key, the place, and the skipped bit are fixed.
         # Create a new node with given new key.
-        new_node: Node = Node(key=key_to_insert, skipped_bit=skipped_bit)
+        new_node: PNode = PNode(key=key_to_insert, skipped_bit=skipped_bit)
 
         if verbose:
             print("\nAdding " + str(new_node))
@@ -299,12 +318,12 @@ class Patricia:
         dict: Patricia = Patricia()
 
         # As same as the textbook.
-        node1: Node = Node(key=Bitskey(1), skipped_bit=0)
-        node18: Node = Node(key=Bitskey(18), skipped_bit=0)
-        node3: Node = Node(key=Bitskey(3), left=node1, skipped_bit=1)
-        node26: Node = Node(key=Bitskey(26), left=node18, skipped_bit=3)
-        node5: Node = Node(key=Bitskey(5), left=node3, skipped_bit=2)
-        node19: Node = Node(key=Bitskey(19), left=node5, right=node26, skipped_bit=4)
+        node1: PNode = PNode(key=Bitskey(1), skipped_bit=0)
+        node18: PNode = PNode(key=Bitskey(18), skipped_bit=0)
+        node3: PNode = PNode(key=Bitskey(3), left=node1, skipped_bit=1)
+        node26: PNode = PNode(key=Bitskey(26), left=node18, skipped_bit=3)
+        node5: PNode = PNode(key=Bitskey(5), left=node3, skipped_bit=2)
+        node19: PNode = PNode(key=Bitskey(19), left=node5, right=node26, skipped_bit=4)
 
         dict.root = node19
         dict.key_min = Bitskey(1)
@@ -332,16 +351,13 @@ class Patricia:
 
 
 if __name__ == "__main__":
-    tree = Patricia()
+    from common.invoker import from_input
 
+    trie = Patricia()
+    insert_generic = lambda key: trie.insert if key.isdigit() else trie.insert_char
+    search_generic = lambda key: trie.search if key.isdigit() else trie.search_char
+    key_transform = lambda key: Bitskey(int(key)) if key.isdigit() else key
 
-    string = "MUQWFNGIHP"
-
-    [tree.insert_char(x, verbose=True) for x in string]
-
-
-    """
-    nums = [1, 19, 5, 18, 3]
-
-    [tree.insert(Bitskey(x), verbose=True) for x in nums]
-    """
+    insert = lambda key, verbose: insert_generic(key)(key_transform(key), verbose)
+    search = lambda key, verbose: True if search_generic(key)(key_transform(key), verbose) is not None else False
+    from_input(insert, search)

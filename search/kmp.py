@@ -1,9 +1,14 @@
-"""This module contains a single function: [blahblah].
+"""
+This module contains kmp implementation.
+
+Terms:
+    FSM: Finite State Machine
+    lps: Longest Proper Suffix(prefix)
 
 You can run a test using this command:
-    python3 -m doctest [blahblah].py -v
+    python3 -m doctest kmp.py -v
 or just
-    python3 [blahblah].py [--verbose]
+    python3 kmp.py [--verbose]
 """
 
 
@@ -106,7 +111,9 @@ def kmp(text, pattern, verbose=False):
 
 
 if __name__ == "__main__":
-    import doctest
-    doctest.testmod(verbose=False)
+    from common.invoker import from_input
 
-    kmp("ababacabcbababca", "ababca", verbose=True)
+    inputs = []
+    insert = lambda key, verbose: inputs.append(key)
+    search = lambda key, verbose: True if kmp(''.join(inputs), key, verbose) is not -1 else False
+    from_input(insert, search)
