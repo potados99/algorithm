@@ -80,7 +80,7 @@ def heap_sort(collection, verbose=False):
     """
 
     size = len(collection)
-    last_subtree_root = (size << 1) - 1
+    last_subtree_root = (size >> 1) - 1
 
     # 1. Build max heap.
     if verbose: print("1. Build max heap:")
