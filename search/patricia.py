@@ -171,16 +171,18 @@ class Patricia:
             key_to_find(Bitskey): A key to find in a tree(trie).
 
         Returns:
-            Bitskey: Matching key on success, minimum key on failure.
+            Bitskey: Matching key on success, or key of the closest node.
         """
         node: PNode = self.find_node_top_down(key_to_find=key_to_find, verbose=verbose)[1]
 
-        if key_to_find == node.key:
-            if verbose: print("The key(" + str(key_to_find) + ") is found.")
-            return Node
-        else:
-            if verbose: print("The key(" + str(key_to_find) + ") is not found.")
-            return None
+        if verbose: 
+            if key_to_find == node.key:
+                print("The key(" + str(key_to_find) + ") is found.")
+            else:
+                print("The key(" + str(key_to_find) + ") is not found.")
+
+        return node.key
+
 
     def search_char(self, char, verbose=False):
         return self.search(key_to_find=Bitskey(ord(char) - 64), verbose=verbose)
@@ -329,6 +331,8 @@ class Patricia:
         dict.key_min = Bitskey(1)
 
         result: Bitskey = dict.search(Bitskey(key_to_find), verbose=False)
+        if result is None:
+            return "Fail"
 
         if result.get() == key_to_find:
             return "Success"
@@ -359,5 +363,5 @@ if __name__ == "__main__":
     key_transform = lambda key: Bitskey(int(key)) if key.isdigit() else key
 
     insert = lambda key, verbose: insert_generic(key)(key_transform(key), verbose)
-    search = lambda key, verbose: True if search_generic(key)(key_transform(key), verbose) is not None else False
+    search = lambda key, verbose: True if search_generic(key)(key_transform(key), verbose) == key_transform(key) else False
     from_input(insert, search)
